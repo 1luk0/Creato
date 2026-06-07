@@ -12,10 +12,16 @@ await connectDB();
 // Middlewares estándar
 app.use(express.json());
 
-// TODO: Vincular las rutas cuando los controladores estén listos
-// app.use('/api/usuarios', usuarioRoutes);
-// app.use('/api/creativos', creativoRoutes);
-// app.use('/api/ofertas', ofertaRoutes);
+// Rutas RAG y búsqueda vectorial
+import ragRoutes                 from './routes/ragRoutes.js';
+import vectorTransRoutes         from './routes/vectortranscripcionesRoutes.js';
+import vectorCursosRoutes        from './routes/vectorCursosRoutes.js';
+import vectorPerfilRoutes        from './routes/vectorPerfilRoutes.js';
+
+app.use('/api',                          ragRoutes);
+app.use('/api/vector/transcripciones',   vectorTransRoutes);
+app.use('/api/vector/cursos',            vectorCursosRoutes);
+app.use('/api/vector/perfil',            vectorPerfilRoutes);
 
 // Ruta base de prueba
 app.get('/', (req, res) => {

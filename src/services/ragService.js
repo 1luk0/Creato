@@ -1,6 +1,10 @@
 import { embed } from './embeddingService.js';
+import { embedImage, embedTextForImage } from './imageEmbeddingService.js';
 import { generarRespuesta } from './llmService.js';
 import VectorTranscripciones from '../models/VectorTranscripciones.js';
+import VectorPerfilCreativo from '../models/VectorPerfilCreativo.js';
+import VectorCursos from '../models/VectorCursos.js';
+import Publicaciones from '../models/Publicaciones.js';
 
 const VECTOR_INDEX = 'rag_transcripciones';
 
@@ -71,6 +75,55 @@ RESPUESTA:`;
  * @param {number}      limit       Chunks a recuperar (default 3)
  * @returns {Promise<{respuesta: string, chunks: Array}>}
  */
+/**
+ * Busca perfiles creativos similares a una descripción textual.
+ * Usa $vectorSearch sobre vector_perfil_creativo.vector_embedding (384-dim, MiniLM).
+ */
+export async function retrieveCreativos(queryText, limit = 5) {
+  const queryVector = await embed(queryText);
+  return VectorPerfilCreativo.aggregate([
+    { $vectorSearch: { index: 'rag_vector_perfil', path: 'vector_embedding', queryVector, numCandidates: limit * 10, limit } },
+    { $project: { _id: 1, perfil_creativo_id: 1, tipo: 1, contenido: 1, score: { $meta: 'vectorSearchScore' } } }
+  ]);
+}
+
+/**
+ * Busca cursos similares a una consulta textual.
+ * Usa $vectorSearch sobre vector_cursos.vector_embedding (384-dim, MiniLM).
+ */
+export async function retrieveCursos(queryText, limit = 5) {
+  const queryVector = await embed(queryText);
+  return VectorCursos.aggregate([
+    { $vectorSearch: { index: 'rag_vector_cursos', path: 'vector_embedding', queryVector, numCandidates: limit * 10, limit } },
+    { $project: { _id: 1, curso_id: 1, tipo: 1, contenido: 1, score: { $meta: 'vectorSearchScore' } } }
+  ]);
+}
+
+/**
+ * Busca publicaciones visualmente similares a una imagen (imagen-a-imagen).
+ * Usa $vectorSearch sobre publicaciones.vector_imagen (512-dim, CLIP).
+ * @param {string} imageUrl  URL pública de la imagen de referencia
+ */
+export async function retrieveByImage(imageUrl, limit = 5) {
+  const queryVector = await embedImage(imageUrl);
+  return Publicaciones.aggregate([
+    { $vectorSearch: { index: 'rag_publicaciones_img', path: 'vector_imagen', queryVector, numCandidates: limit * 10, limit } },
+    { $project: { _id: 1, creativo_id: 1, imagen_url: 1, descripcion: 1, categorias: 1, score: { $meta: 'vectorSearchScore' } } }
+  ]);
+}
+
+/**
+ * Busca publicaciones similares a una descripción textual (texto-a-imagen, multimodal).
+ * Usa CLIP text encoder para proyectar el texto al espacio visual (512-dim).
+ */
+export async function retrieveTextToImage(texto, limit = 5) {
+  const queryVector = await embedTextForImage(texto);
+  return Publicaciones.aggregate([
+    { $vectorSearch: { index: 'rag_publicaciones_img', path: 'vector_imagen', queryVector, numCandidates: limit * 10, limit } },
+    { $project: { _id: 1, creativo_id: 1, imagen_url: 1, descripcion: 1, categorias: 1, score: { $meta: 'vectorSearchScore' } } }
+  ]);
+}
+
 export async function ragQuery(queryText, estrategia = null, limit = 3) {
   const chunks = await retrieve(queryText, estrategia, limit);
   if (!chunks.length) {
