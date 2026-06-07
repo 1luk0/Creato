@@ -8,52 +8,129 @@ import {
 } from '../services/ragService.js';
 
 // POST /api/rag
-// body: { query, estrategia? }
-// Devuelve respuesta de Gemini + chunks de transcripción usados como contexto.
 export async function rag(req, res) {
-  const { query, estrategia = null } = req.body ?? {};
-  if (!query) return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+  console.log(`\n[ragController] ── POST /api/rag ──`);
+  console.log(`[ragController]   body: ${JSON.stringify(req.body)}`);
 
-  const result = await ragQuery(query, estrategia);
-  res.json(result);
+  const { query, estrategia = null } = req.body ?? {};
+  if (!query) {
+    console.log(`[ragController] ❌ Falta el campo "query"`);
+    return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+  }
+
+  try {
+    const result = await ragQuery(query, estrategia);
+    console.log(`[ragController] ✅ Respuesta enviada al cliente`);
+    res.json(result);
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
+  }
 }
 
-// POST /api/search
-// body: { query, tipo? }  tipo: transcripciones | cursos | creativos (default: transcripciones)
-// Devuelve documentos relevantes sin generación LLM.
-export async function search(req, res) {
-  const { query, tipo = 'transcripciones', estrategia = null, limit = 5 } = req.body ?? {};
-  if (!query) return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+// POST /api/search/transcripciones
+export async function searchTranscripciones(req, res) {
+  console.log(`\n[ragController] ── POST /api/search/transcripciones ──`);
+  console.log(`[ragController]   body: ${JSON.stringify(req.body)}`);
 
-  let resultados;
-  if (tipo === 'cursos') {
-    resultados = await retrieveCursos(query, limit);
-  } else if (tipo === 'creativos') {
-    resultados = await retrieveCreativos(query, limit);
-  } else {
-    resultados = await retrieve(query, estrategia, limit);
+  const { query, estrategia = null, limit = 5 } = req.body ?? {};
+  if (!query) {
+    console.log(`[ragController] ❌ Falta el campo "query"`);
+    return res.status(400).json({ error: 'El campo "query" es obligatorio' });
   }
-  res.json({ tipo, query, resultados });
+
+  console.log(`[ragController]   estrategia: ${estrategia ?? 'ninguna'} | limit: ${limit}`);
+
+  try {
+    const resultados = await retrieve(query, estrategia, limit);
+    console.log(`[ragController] ✅ ${resultados.length} chunks enviados`);
+    res.json({ query, estrategia, resultados });
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
+  }
+}
+
+// POST /api/search/cursos
+export async function searchCursos(req, res) {
+  console.log(`\n[ragController] ── POST /api/search/cursos ──`);
+  console.log(`[ragController]   body: ${JSON.stringify(req.body)}`);
+
+  const { query, limit = 5 } = req.body ?? {};
+  if (!query) {
+    console.log(`[ragController] ❌ Falta el campo "query"`);
+    return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+  }
+
+  try {
+    const resultados = await retrieveCursos(query, limit);
+    console.log(`[ragController] ✅ ${resultados.length} cursos enviados`);
+    res.json({ query, resultados });
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
+  }
+}
+
+// POST /api/search/creativos
+export async function searchCreativos(req, res) {
+  console.log(`\n[ragController] ── POST /api/search/creativos ──`);
+  console.log(`[ragController]   body: ${JSON.stringify(req.body)}`);
+
+  const { query, limit = 5 } = req.body ?? {};
+  if (!query) {
+    console.log(`[ragController] ❌ Falta el campo "query"`);
+    return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+  }
+
+  try {
+    const resultados = await retrieveCreativos(query, limit);
+    console.log(`[ragController] ✅ ${resultados.length} perfiles enviados`);
+    res.json({ query, resultados });
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
+  }
 }
 
 // POST /api/search/image
-// body: { image_url }
-// Devuelve publicaciones visualmente similares (imagen-a-imagen).
 export async function searchByImage(req, res) {
-  const { image_url, limit = 5 } = req.body ?? {};
-  if (!image_url) return res.status(400).json({ error: 'El campo "image_url" es obligatorio' });
+  console.log(`\n[ragController] ── POST /api/search/image ──`);
+  console.log(`[ragController]   body: ${JSON.stringify(req.body)}`);
 
-  const resultados = await retrieveByImage(image_url, limit);
-  res.json({ image_url, resultados });
+  const { image_url, limit = 5 } = req.body ?? {};
+  if (!image_url) {
+    console.log(`[ragController] ❌ Falta el campo "image_url"`);
+    return res.status(400).json({ error: 'El campo "image_url" es obligatorio' });
+  }
+
+  try {
+    const resultados = await retrieveByImage(image_url, limit);
+    console.log(`[ragController] ✅ ${resultados.length} publicaciones similares enviadas`);
+    res.json({ image_url, resultados });
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
+  }
 }
 
 // POST /api/search/multimodal
-// body: { query }
-// Devuelve publicaciones cuyas imágenes coinciden semánticamente con el texto (texto-a-imagen).
 export async function searchMultimodal(req, res) {
-  const { query, limit = 5 } = req.body ?? {};
-  if (!query) return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+  console.log(`\n[ragController] ── POST /api/search/multimodal ──`);
+  console.log(`[ragController]   body: ${JSON.stringify(req.body)}`);
 
-  const resultados = await retrieveTextToImage(query, limit);
-  res.json({ query, resultados });
+  const { query, limit = 5 } = req.body ?? {};
+  if (!query) {
+    console.log(`[ragController] ❌ Falta el campo "query"`);
+    return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+  }
+
+  try {
+    const resultados = await retrieveTextToImage(query, limit);
+    console.log(`[ragController] ✅ ${resultados.length} publicaciones enviadas`);
+    res.json({ query, resultados });
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
+  }
 }
