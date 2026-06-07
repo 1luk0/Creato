@@ -1,25 +1,33 @@
 // src/app.js
-import 'dotenv/config'; // Inicializa las variables de entorno automáticamente
+import 'dotenv/config';
 import express from 'express';
-import connectDB from './config/db.js'; // Importación directa (asumiendo que usaste export default)
+import connectDB from './config/db.js';
 
+import usuariosRoutes from './routes/usuariosRoutes.js';
+import perfilCreativoRoutes from './routes/perfilCreativoRoutes.js';
+import perfilEmpresaRoutes from './routes/perfilEmpresaRoutes.js';
+import ofertaLaboralRoutes from './routes/ofertaLaboralRoutes.js';
+import comentariosRoutes from './routes/comentariosRoutes.js';
+import vectorPerfilRoutes from './routes/vectorPerfilRoutes.js';
+import vectorOfertaLaboralRoutes from './routes/vectorOfertaLaboralRoutes.js';
 
 const app = express();
 
-// Inicializar la conexión a Atlas (con el mismo nombre que importaste)
-await connectDB(); 
+await connectDB();
 
-// Middlewares estándar
 app.use(express.json());
 
-// TODO: Vincular las rutas cuando los controladores estén listos
-// app.use('/api/usuarios', usuarioRoutes);
-// app.use('/api/creativos', creativoRoutes);
-// app.use('/api/ofertas', ofertaRoutes);
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/perfil-creativo', perfilCreativoRoutes);
+app.use('/api/perfil-empresa', perfilEmpresaRoutes);
+app.use('/api/oferta-laboral', ofertaLaboralRoutes);
+app.use('/api/comentarios', comentariosRoutes);
+app.use('/api/vector-perfil-creativo', vectorPerfilRoutes);
+app.use('/api/vector-oferta-laboral', vectorOfertaLaboralRoutes);
 
 // Ruta base de prueba
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     status: "online",
     message: "Backend de Agencia de Diseño y Sistema RAG activo 🚀",
     timestamp: new Date()

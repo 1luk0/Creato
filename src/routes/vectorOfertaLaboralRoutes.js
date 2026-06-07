@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { crear, obtenerTodos, obtenerPorId, actualizar, eliminar } from '../controllers/vectorPerfilCreativoController.js';
+import { crear, obtenerTodos, obtenerPorId, actualizar, eliminar } from '../controllers/vectorOfertaLaboralController.js';
 
 const router = Router();
 
