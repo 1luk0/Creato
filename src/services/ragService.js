@@ -1,4 +1,5 @@
 import { embed } from './embeddingService.js';
+import { generarRespuesta } from './llmService.js';
 import VectorTranscripciones from '../models/VectorTranscripciones.js';
 
 const VECTOR_INDEX = 'rag_transcripciones';
@@ -38,4 +39,47 @@ export async function retrieve(queryText, estrategia = null, limit = 3) {
   ];
 
   return VectorTranscripciones.aggregate(pipeline);
+}
+
+/**
+ * Construye el prompt para Gemini con los chunks recuperados como contexto.
+ * @param {string} queryText  Pregunta original del usuario
+ * @param {Array}  chunks     Resultados de retrieve()
+ * @returns {string} Prompt completo
+ */
+export function buildPrompt(queryText, chunks) {
+  const contexto = chunks.map((c, i) => {
+    const inicio = c.metadata?.minuto_inicio ?? '?';
+    const fin    = c.metadata?.minuto_fin    ?? '?';
+    return `[Fragmento ${i + 1} — ${inicio}s a ${fin}s]\n${c.contenido_segmento}`;
+  }).join('\n\n');
+
+  return `Eres un asistente educativo de la plataforma Kreato. Responde la pregunta del estudiante usando ÚNICAMENTE la información de los fragmentos de video proporcionados. Cita el timestamp del video cuando sea relevante.
+
+CONTEXTO (fragmentos de transcripción):
+${contexto}
+
+PREGUNTA: ${queryText}
+
+RESPUESTA:`;
+}
+
+/**
+ * Pipeline RAG completo para transcripciones: embed → retrieve → buildPrompt → Gemini.
+ * @param {string}      queryText   Pregunta del usuario
+ * @param {string|null} estrategia  Estrategia de chunking a usar (null = sin filtro)
+ * @param {number}      limit       Chunks a recuperar (default 3)
+ * @returns {Promise<{respuesta: string, chunks: Array}>}
+ */
+export async function ragQuery(queryText, estrategia = null, limit = 3) {
+  const chunks = await retrieve(queryText, estrategia, limit);
+  if (!chunks.length) {
+    return {
+      respuesta: 'No encontré fragmentos relevantes en las transcripciones disponibles.',
+      chunks: []
+    };
+  }
+  const prompt   = buildPrompt(queryText, chunks);
+  const respuesta = await generarRespuesta(prompt);
+  return { respuesta, chunks };
 }
