@@ -4,7 +4,7 @@
 
 import { embedImage, embedTextForImage } from '../src/services/imageEmbeddingService.js';
 
-const IMG_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/300px-Camponotus_flavomarginatus_ant.jpg';
+const IMG_URL = 'https://picsum.photos/id/1015/300/200';
 const TEXTO_1 = 'a colorful digital illustration of a fantasy forest';
 const TEXTO_2 = 'portrait of a character with dark armor';
 

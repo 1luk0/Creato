@@ -4,8 +4,11 @@ const HF_MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2';
 const HF_URL   = `https://router.huggingface.co/hf-inference/models/${HF_MODEL}/pipeline/feature-extraction`;
 const DIMS     = 384;
 
-// Reintento único si el modelo está cargando (HTTP 503 con estimated_time)
 async function llamarHF(texto, intento = 1) {
+  console.log(`[embeddingService] → HuggingFace API (intento ${intento})`);
+  console.log(`[embeddingService]   modelo : ${HF_MODEL}`);
+  console.log(`[embeddingService]   texto  : "${texto.slice(0, 60)}${texto.length > 60 ? '...' : ''}"`);
+
   const res = await fetch(HF_URL, {
     method:  'POST',
     headers: {
@@ -15,10 +18,12 @@ async function llamarHF(texto, intento = 1) {
     body: JSON.stringify({ inputs: texto })
   });
 
+  console.log(`[embeddingService]   HTTP status: ${res.status}`);
+
   if (res.status === 503 && intento === 1) {
     const { estimated_time } = await res.json();
     const espera = Math.ceil((estimated_time ?? 20) * 1000);
-    console.log(`⏳ Modelo cargando en HF — reintentando en ${espera / 1000}s...`);
+    console.log(`[embeddingService] ⏳ Modelo cargando — reintentando en ${espera / 1000}s...`);
     await new Promise(r => setTimeout(r, espera));
     return llamarHF(texto, 2);
   }
@@ -31,24 +36,20 @@ async function llamarHF(texto, intento = 1) {
   return res.json();
 }
 
-/**
- * Genera el embedding de un texto usando paraphrase-multilingual-MiniLM-L12-v2.
- * @param {string} texto
- * @returns {Promise<number[]>} Vector de 384 dimensiones
- */
 export async function embed(texto) {
   if (!texto || typeof texto !== 'string' || texto.trim() === '') {
     throw new Error('embed() requiere un texto no vacío');
   }
 
+  console.log(`[embeddingService] embed() llamado`);
   const data = await llamarHF(texto.trim());
 
-  // La API devuelve [[n1, n2, ...]] — array anidado de un solo elemento
   const vector = Array.isArray(data[0]) ? data[0] : data;
 
   if (vector.length !== DIMS) {
     throw new Error(`Vector inválido: se esperaban ${DIMS} dims, se recibieron ${vector.length}`);
   }
 
+  console.log(`[embeddingService] ✅ vector generado — ${vector.length} dims | primeros 3: [${vector.slice(0, 3).map(v => v.toFixed(4)).join(', ')}]`);
   return vector;
 }
