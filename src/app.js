@@ -1,32 +1,34 @@
+// src/app.js
+import 'dotenv/config'; // Inicializa las variables de entorno automáticamente
 import express from 'express';
-import dotenv from 'dotenv';
-import { connectDB } from './config/db.js';
-import usuarioRoutes from './routes/usuarioRoutes.js';
-import creativoRoutes from './routes/creativoRoutes.js';
-import ofertaRoutes from './routes/ofertaRoutes.js';
+import connectDB from './config/db.js'; // Importación directa (asumiendo que usaste export default)
 
-dotenv.config();
 
 const app = express();
+
+// Inicializar la conexión a Atlas (con el mismo nombre que importaste)
+await connectDB(); 
+
+// Middlewares estándar
 app.use(express.json());
 
-app.use('/api/usuarios', usuarioRoutes);
-app.use('/api/creativos', creativoRoutes);
-app.use('/api/ofertas', ofertaRoutes);
+// TODO: Vincular las rutas cuando los controladores estén listos
+// app.use('/api/usuarios', usuarioRoutes);
+// app.use('/api/creativos', creativoRoutes);
+// app.use('/api/ofertas', ofertaRoutes);
 
+// Ruta base de prueba
 app.get('/', (req, res) => {
-  res.send('Kreato Backend API está en línea');
+  res.json({ 
+    status: "online",
+    message: "Backend de Agencia de Diseño y Sistema RAG activo 🚀",
+    timestamp: new Date()
+  });
 });
 
 const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
-  await connectDB();
-  app.listen(PORT, () => {
-    console.log(`Servidor escuchando en http://localhost:${PORT}`);
-  });
-};
-
-startServer();
+app.listen(PORT, () => {
+  console.log(` Servidor HTTP corriendo en el puerto ${PORT}`);
+});
 
 export default app;
