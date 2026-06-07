@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-const HF_MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2';
+const HF_MODEL = 'sentence-transformers/all-MiniLM-L6-v2';
 const HF_URL   = `https://router.huggingface.co/hf-inference/models/${HF_MODEL}/pipeline/feature-extraction`;
 const DIMS     = 384;
 

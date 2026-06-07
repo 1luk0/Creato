@@ -18,10 +18,16 @@ import vectorTransRoutes         from './routes/vectortranscripcionesRoutes.js';
 import vectorCursosRoutes        from './routes/vectorCursosRoutes.js';
 import vectorPerfilRoutes        from './routes/vectorPerfilRoutes.js';
 
+// Rutas de entidades con auto-vectorización
+import publicacionesRoutes       from './routes/publicacionesRoutes.js';
+import perfilCreativoRoutes      from './routes/perfilCreativoRoutes.js';
+
 app.use('/api',                          ragRoutes);
 app.use('/api/vector/transcripciones',   vectorTransRoutes);
 app.use('/api/vector/cursos',            vectorCursosRoutes);
 app.use('/api/vector/perfil',            vectorPerfilRoutes);
+app.use('/api/publicaciones',            publicacionesRoutes);
+app.use('/api/perfil-creativo',          perfilCreativoRoutes);
 
 // Ruta base de prueba
 app.get('/', (req, res) => {
