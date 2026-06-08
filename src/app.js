@@ -12,6 +12,7 @@ import vectorOfertaLaboralRoutes from './routes/vectorOfertaLaboralRoutes.js';
 // Entidades con auto-vectorización
 import publicacionesRoutes       from './routes/publicacionesRoutes.js';
 import perfilCreativoRoutes      from './routes/perfilCreativoRoutes.js';
+import creativoRoutes            from './routes/creativoRoutes.js';
 
 // CRUD
 import usuariosRoutes            from './routes/usuariosRoutes.js';
@@ -46,6 +47,7 @@ app.use('/api/vector/oferta-laboral',    vectorOfertaLaboralRoutes);
 // Entidades con vectorización automática al crear
 app.use('/api/publicaciones',            publicacionesRoutes);
 app.use('/api/perfil-creativo',          perfilCreativoRoutes);
+app.use('/api/creativos',               creativoRoutes);
 
 // CRUD general
 app.use('/api/usuarios',                 usuariosRoutes);
