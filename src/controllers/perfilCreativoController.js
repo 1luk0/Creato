@@ -37,6 +37,13 @@ export async function listarPerfiles(req, res) {
   res.json(await PerfilCreativo.find(filtro, { vector_descripcion: 0, vector_portafolio_global: 0 }));
 }
 
+// GET /api/perfil-creativo/usuario/:userId
+export async function obtenerPerfilPorUsuario(req, res) {
+  const doc = await PerfilCreativo.findOne({ user_id: req.params.userId }, { vector_descripcion: 0, vector_portafolio_global: 0 });
+  if (!doc) throw httpError(404, 'Perfil creativo no encontrado para ese usuario');
+  res.json(doc);
+}
+
 // GET /api/creativos/:id
 export async function obtenerPerfil(req, res) {
   const doc = await PerfilCreativo.findById(req.params.id, { vector_descripcion: 0, vector_portafolio_global: 0 });
