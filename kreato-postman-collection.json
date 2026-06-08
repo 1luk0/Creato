@@ -1,0 +1,1376 @@
+{
+  "info": {
+    "name": "Kreato - Agencia de Diseño",
+    "_postman_id": "kreato-collection-v1",
+    "description": "Colección completa de endpoints para el backend de Kreato. Base URL: {{baseUrl}}. Proyecto Bases de Datos No Relacionales - Universidad de Caldas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "userId", "value": "usr_1", "type": "string" },
+    { "key": "perfilCreativoId", "value": "pc_1", "type": "string" },
+    { "key": "perfilEmpresaId", "value": "pe_1", "type": "string" },
+    { "key": "cursoId", "value": "cur_1", "type": "string" },
+    { "key": "publicacionId", "value": "pub_1", "type": "string" },
+    { "key": "transcripcionId", "value": "trans_1", "type": "string" },
+    { "key": "ofertaLaboralId", "value": "ol_1", "type": "string" },
+    { "key": "ofertaAsesoriaId", "value": "oas_1", "type": "string" },
+    { "key": "ofertaEncargoId", "value": "enc_1", "type": "string" },
+    { "key": "solicitudId", "value": "sol_1", "type": "string" },
+    { "key": "pagoId", "value": "pag_1", "type": "string" },
+    { "key": "asesoriaId", "value": "ase_1", "type": "string" },
+    { "key": "encargoId", "value": "encar_1", "type": "string" },
+    { "key": "comentarioId", "value": "com_1", "type": "string" },
+    { "key": "chunkId", "value": "chk_001", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🤖 RAG - Pipeline IA",
+      "item": [
+        {
+          "name": "RAG Query (respuesta con Gemini)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/rag", "host": ["{{baseUrl}}"], "path": ["api", "rag"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"¿Qué es el diseño editorial y cómo se aplica?\",\n  \"estrategia\": \"semantic_split_v1\",\n  \"limit\": 3\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search - Transcripciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/search/transcripciones", "host": ["{{baseUrl}}"], "path": ["api", "search", "transcripciones"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"tipografía y jerarquía visual\",\n  \"estrategia\": \"fixed_size_v1\",\n  \"limit\": 3\n}"
+            },
+            "description": "Busca chunks de transcripciones por similitud vectorial. estrategia puede ser: fixed_size_v1, semantic_split_v1, sentence_window_v1 (o null para todas)."
+          },
+          "response": []
+        },
+        {
+          "name": "Search - Cursos",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/search/cursos", "host": ["{{baseUrl}}"], "path": ["api", "search", "cursos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"diseño gráfico para redes sociales\",\n  \"limit\": 5\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search - Creativos (perfiles)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/search/creativos", "host": ["{{baseUrl}}"], "path": ["api", "search", "creativos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"ilustrador con experiencia en branding\",\n  \"limit\": 5\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search - Por imagen (URL)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/search/image", "host": ["{{baseUrl}}"], "path": ["api", "search", "image"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageUrl\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/400px-Camponotus_flavomarginatus_ant.jpg\",\n  \"limit\": 5\n}"
+            },
+            "description": "Busca publicaciones visualmente similares usando embeddings CLIP (512-dim). Requiere URL pública de imagen."
+          },
+          "response": []
+        },
+        {
+          "name": "Search - Multimodal (texto → imagen)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/search/multimodal", "host": ["{{baseUrl}}"], "path": ["api", "search", "multimodal"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"logo minimalista para empresa de tecnología\",\n  \"limit\": 5\n}"
+            },
+            "description": "Busca publicaciones por descripción textual usando modelo CLIP texto→imagen."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👤 Usuarios",
+      "item": [
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api", "usuarios"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear usuario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api", "usuarios"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"usr_1\",\n  \"nombre\": \"Carlos García\",\n  \"telefono\": \"3001234567\",\n  \"correo\": \"carlos@ejemplo.com\",\n  \"password\": \"hashed_password_123\",\n  \"tipo_usuario\": \"CREATIVO\",\n  \"intereses\": [\"diseño gráfico\", \"branding\", \"tipografía\"]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener usuario por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "{{userId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/usuarios/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "{{userId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos García Actualizado\",\n  \"telefono\": \"3009876543\",\n  \"intereses\": [\"diseño UX\", \"branding\", \"motion graphics\"]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar usuario",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "{{userId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🎨 Perfil Creativo",
+      "description": "Montado en /api/creativos. Genera embeddings al crear (vector_descripcion 384-dim + vector_portafolio_global 512-dim CLIP).",
+      "item": [
+        {
+          "name": "Listar perfiles creativos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/creativos?profesion=ilustrador&habilidad=Illustrator&rating_min=4",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "creativos"],
+              "query": [
+                { "key": "profesion", "value": "ilustrador", "disabled": true },
+                { "key": "habilidad", "value": "Illustrator", "disabled": true },
+                { "key": "rating_min", "value": "4", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear perfil creativo (auto-vectoriza)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/creativos", "host": ["{{baseUrl}}"], "path": ["api", "creativos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"pc_1\",\n  \"user_id\": \"usr_1\",\n  \"descripcion\": \"Ilustrador especializado en branding y diseño editorial con 5 años de experiencia en proyectos de identidad corporativa\",\n  \"profesiones\": [\"Ilustrador\", \"Diseñador Gráfico\"],\n  \"habilidades\": [\"Illustrator\", \"Photoshop\", \"Figma\"],\n  \"experiencia\": \"5 años\",\n  \"foto_perfil\": \"https://ejemplo.com/foto.jpg\"\n}"
+            },
+            "description": "Genera automáticamente vector_descripcion (384-dim) y vector_portafolio_global (512-dim CLIP)."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener perfil por usuario",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/creativos/usuario/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "creativos", "usuario", "{{userId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener perfil por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/creativos/{{perfilCreativoId}}", "host": ["{{baseUrl}}"], "path": ["api", "creativos", "{{perfilCreativoId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar perfil creativo",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/creativos/{{perfilCreativoId}}", "host": ["{{baseUrl}}"], "path": ["api", "creativos", "{{perfilCreativoId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Ilustrador y diseñador gráfico con especialización en branding digital y diseño editorial. Proyectos nacionales e internacionales.\",\n  \"habilidades\": [\"Illustrator\", \"Photoshop\", \"Figma\", \"After Effects\"]\n}"
+            },
+            "description": "Si cambia descripcion, re-vectoriza automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar perfil creativo",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/creativos/{{perfilCreativoId}}", "host": ["{{baseUrl}}"], "path": ["api", "creativos", "{{perfilCreativoId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏢 Perfil Empresa",
+      "item": [
+        {
+          "name": "Listar perfiles empresa",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/perfil-empresa", "host": ["{{baseUrl}}"], "path": ["api", "perfil-empresa"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear perfil empresa",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/perfil-empresa", "host": ["{{baseUrl}}"], "path": ["api", "perfil-empresa"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"pe_1\",\n  \"user_id\": \"usr_2\",\n  \"nit\": \"900.123.456-1\",\n  \"sector\": \"Tecnología\",\n  \"web\": \"https://empresa.com\",\n  \"descripcion\": \"Empresa de desarrollo de software y diseño digital\",\n  \"logo\": \"https://empresa.com/logo.png\",\n  \"verificado\": false\n}"
+            },
+            "description": "El NIT debe tener formato: 000.000.000-0"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener perfil empresa por usuario",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/perfil-empresa/usuario/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "perfil-empresa", "usuario", "{{userId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener perfil empresa por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/perfil-empresa/{{perfilEmpresaId}}", "host": ["{{baseUrl}}"], "path": ["api", "perfil-empresa", "{{perfilEmpresaId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar perfil empresa",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/perfil-empresa/{{perfilEmpresaId}}", "host": ["{{baseUrl}}"], "path": ["api", "perfil-empresa", "{{perfilEmpresaId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sector\": \"Tecnología y Diseño\",\n  \"descripcion\": \"Empresa líder en desarrollo de software y diseño UX/UI\",\n  \"web\": \"https://empresa-actualizada.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar perfil empresa",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/perfil-empresa/{{perfilEmpresaId}}", "host": ["{{baseUrl}}"], "path": ["api", "perfil-empresa", "{{perfilEmpresaId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🖼️ Publicaciones",
+      "description": "Auto-vectoriza vector_imagen (512-dim CLIP) con la imagen al crear.",
+      "item": [
+        {
+          "name": "Crear publicación (auto-vectoriza imagen CLIP)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/publicaciones", "host": ["{{baseUrl}}"], "path": ["api", "publicaciones"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"pub_1\",\n  \"creativo_id\": \"pc_1\",\n  \"imagen_url\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/400px-Camponotus_flavomarginatus_ant.jpg\",\n  \"descripcion\": \"Identidad corporativa minimalista para startup tecnológica\",\n  \"categorias\": [\"branding\", \"identidad corporativa\", \"minimalismo\"],\n  \"es_portafolio\": true\n}"
+            },
+            "description": "Genera vector_imagen (512-dim CLIP) automáticamente a partir de imagen_url."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener publicación por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/publicaciones/{{publicacionId}}", "host": ["{{baseUrl}}"], "path": ["api", "publicaciones", "{{publicacionId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💼 Oferta Laboral",
+      "item": [
+        {
+          "name": "Listar ofertas laborales",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/oferta-laboral", "host": ["{{baseUrl}}"], "path": ["api", "oferta-laboral"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear oferta laboral",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-laboral", "host": ["{{baseUrl}}"], "path": ["api", "oferta-laboral"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"ol_1\",\n  \"perfil_empresa_id\": \"pe_1\",\n  \"cargo\": \"Diseñador UX/UI Senior\",\n  \"descripcion\": \"Buscamos diseñador UX/UI con experiencia en Figma y diseño de sistemas. Trabajo remoto, tiempo completo.\",\n  \"presupuesto\": \"$3,000,000 - $5,000,000 COP\",\n  \"estado\": \"activa\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener oferta laboral por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/oferta-laboral/{{ofertaLaboralId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-laboral", "{{ofertaLaboralId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar oferta laboral",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-laboral/{{ofertaLaboralId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-laboral", "{{ofertaLaboralId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"presupuesto\": \"$4,000,000 - $6,000,000 COP\",\n  \"estado\": \"activa\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar oferta laboral",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/oferta-laboral/{{ofertaLaboralId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-laboral", "{{ofertaLaboralId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Postular a oferta laboral",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-laboral/{{ofertaLaboralId}}/postular", "host": ["{{baseUrl}}"], "path": ["api", "oferta-laboral", "{{ofertaLaboralId}}", "postular"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"perfil_creativo_id\": \"pc_1\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📅 Oferta Asesoría",
+      "item": [
+        {
+          "name": "Listar ofertas de asesoría",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/oferta-asesoria?perfil_creativo_id={{perfilCreativoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "oferta-asesoria"],
+              "query": [{ "key": "perfil_creativo_id", "value": "{{perfilCreativoId}}", "disabled": true }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear oferta de asesoría",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-asesoria", "host": ["{{baseUrl}}"], "path": ["api", "oferta-asesoria"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"oas_1\",\n  \"perfil_creativo_id\": \"pc_1\",\n  \"tematicas\": [\"Branding\", \"Diseño Editorial\", \"Tipografía\"],\n  \"tarifas\": [\n    { \"duracion_minutos\": 30, \"precio\": 50000 },\n    { \"duracion_minutos\": 60, \"precio\": 90000 }\n  ],\n  \"disponibilidad\": [\n    { \"dia\": \"Lunes\", \"horas\": [\"10:00\", \"14:00\", \"16:00\"] },\n    { \"dia\": \"Miércoles\", \"horas\": [\"09:00\", \"11:00\"] }\n  ]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener oferta de asesoría por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/oferta-asesoria/{{ofertaAsesoriaId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-asesoria", "{{ofertaAsesoriaId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar oferta de asesoría",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-asesoria/{{ofertaAsesoriaId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-asesoria", "{{ofertaAsesoriaId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tematicas\": [\"Branding\", \"Diseño Editorial\", \"Tipografía\", \"Motion Graphics\"],\n  \"tarifas\": [\n    { \"duracion_minutos\": 30, \"precio\": 60000 },\n    { \"duracion_minutos\": 60, \"precio\": 100000 },\n    { \"duracion_minutos\": 90, \"precio\": 140000 }\n  ]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar oferta de asesoría",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/oferta-asesoria/{{ofertaAsesoriaId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-asesoria", "{{ofertaAsesoriaId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar solicitud pendiente",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-asesoria/{{ofertaAsesoriaId}}/solicitudes", "host": ["{{baseUrl}}"], "path": ["api", "oferta-asesoria", "{{ofertaAsesoriaId}}", "solicitudes"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"sol_1\",\n  \"usuario_id\": \"usr_3\",\n  \"hora_inicio\": \"10:00\",\n  \"hora_fin\": \"11:00\"\n}"
+            },
+            "description": "Agrega una solicitud embebida. Máximo 10 por oferta. hora_inicio y hora_fin deben ser formato HH:MM."
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado de solicitud pendiente",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-asesoria/{{ofertaAsesoriaId}}/solicitudes/sol_1/estado", "host": ["{{baseUrl}}"], "path": ["api", "oferta-asesoria", "{{ofertaAsesoriaId}}", "solicitudes", "sol_1", "estado"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"aprobada\"\n}"
+            },
+            "description": "estados válidos: pendiente, aprobada, rechazada"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📦 Oferta Encargo",
+      "description": "Auto-vectoriza descripcion (384-dim MiniLM) e imágenes (512-dim CLIP) al crear.",
+      "item": [
+        {
+          "name": "Listar ofertas de encargo",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/oferta-encargo?usuario_id={{userId}}&estado=abierta&tipo=publica",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "oferta-encargo"],
+              "query": [
+                { "key": "usuario_id", "value": "{{userId}}", "disabled": true },
+                { "key": "estado", "value": "abierta", "disabled": true },
+                { "key": "tipo", "value": "publica", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear oferta de encargo (auto-vectoriza)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-encargo", "host": ["{{baseUrl}}"], "path": ["api", "oferta-encargo"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"enc_1\",\n  \"usuario_id\": \"usr_2\",\n  \"descripcion\": \"Necesito diseñar una identidad visual completa para mi startup de tecnología: logo, paleta de colores y manual de marca\",\n  \"imagenes\": [\n    \"https://ejemplo.com/referencia1.jpg\",\n    \"https://ejemplo.com/referencia2.jpg\"\n  ],\n  \"rango_pago\": { \"min\": 500000, \"max\": 1500000 },\n  \"estado\": \"abierta\",\n  \"tipo\": \"publica\",\n  \"fecha_estimada\": \"2024-04-01\"\n}"
+            },
+            "description": "Genera vector_descripcion (384-dim) y vectores_imagenes[] (512-dim CLIP por imagen)."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener oferta de encargo por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/oferta-encargo/{{ofertaEncargoId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-encargo", "{{ofertaEncargoId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar oferta de encargo",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-encargo/{{ofertaEncargoId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-encargo", "{{ofertaEncargoId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Identidad visual completa para startup tech: logo vectorial, paleta de colores, tipografía y guía de uso\",\n  \"rango_pago\": { \"min\": 800000, \"max\": 2000000 }\n}"
+            },
+            "description": "Si cambia descripcion, re-vectoriza automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado de oferta de encargo",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-encargo/{{ofertaEncargoId}}/estado", "host": ["{{baseUrl}}"], "path": ["api", "oferta-encargo", "{{ofertaEncargoId}}", "estado"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"cerrada\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar oferta de encargo",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/oferta-encargo/{{ofertaEncargoId}}", "host": ["{{baseUrl}}"], "path": ["api", "oferta-encargo", "{{ofertaEncargoId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar postulación",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-encargo/{{ofertaEncargoId}}/postulaciones", "host": ["{{baseUrl}}"], "path": ["api", "oferta-encargo", "{{ofertaEncargoId}}", "postulaciones"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"post_1\",\n  \"perfil_creativo_id\": \"pc_1\",\n  \"precio\": 1200000,\n  \"fecha_estimada_entrega\": \"2024-04-15\",\n  \"cantidad_retroalimentaciones\": 3,\n  \"estado\": \"pendiente\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado de postulación",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/oferta-encargo/{{ofertaEncargoId}}/postulaciones/post_1/estado", "host": ["{{baseUrl}}"], "path": ["api", "oferta-encargo", "{{ofertaEncargoId}}", "postulaciones", "post_1", "estado"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"aceptada\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💬 Comentarios",
+      "item": [
+        {
+          "name": "Listar comentarios por target",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/comentarios?target_id=cur_1&target_type=capitulo",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "comentarios"],
+              "query": [
+                { "key": "target_id", "value": "cur_1" },
+                { "key": "target_type", "value": "capitulo" }
+              ]
+            },
+            "description": "target_type: capitulo | publicacion"
+          },
+          "response": []
+        },
+        {
+          "name": "Crear comentario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/comentarios", "host": ["{{baseUrl}}"], "path": ["api", "comentarios"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"com_1\",\n  \"target_id\": \"cap_1\",\n  \"target_type\": \"capitulo\",\n  \"user_id\": \"usr_1\",\n  \"contenido\": \"Excelente explicación sobre tipografía. ¿Podrían ampliar el tema de jerarquía visual?\"\n}"
+            },
+            "description": "target_type puede ser: capitulo o publicacion"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener comentario por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/comentarios/{{comentarioId}}", "host": ["{{baseUrl}}"], "path": ["api", "comentarios", "{{comentarioId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar respuesta a comentario",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/comentarios/{{comentarioId}}/respuestas", "host": ["{{baseUrl}}"], "path": ["api", "comentarios", "{{comentarioId}}", "respuestas"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"usr_2\",\n  \"contenido\": \"Muy buen punto. En el siguiente capítulo profundizamos en eso.\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar respuesta de comentario",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/comentarios/{{comentarioId}}/respuestas/0", "host": ["{{baseUrl}}"], "path": ["api", "comentarios", "{{comentarioId}}", "respuestas", "0"] },
+            "description": "El último segmento es el índice (0-based) de la respuesta en el array."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar comentario",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/comentarios/{{comentarioId}}", "host": ["{{baseUrl}}"], "path": ["api", "comentarios", "{{comentarioId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📚 Cursos",
+      "item": [
+        {
+          "name": "Listar cursos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/cursos", "host": ["{{baseUrl}}"], "path": ["api", "cursos"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear curso",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cursos", "host": ["{{baseUrl}}"], "path": ["api", "cursos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"cur_1\",\n  \"nombre\": \"Branding y Diseño de Identidad Corporativa\",\n  \"descripcion\": \"Aprende a crear marcas poderosas desde cero: estrategia, diseño, manual y aplicaciones\",\n  \"precio\": 150000,\n  \"categorias\": [\"Branding\", \"Diseño Gráfico\", \"Identidad\"],\n  \"creadores\": [\"usr_1\"]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener curso por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/cursos/{{cursoId}}", "host": ["{{baseUrl}}"], "path": ["api", "cursos", "{{cursoId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar curso",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cursos/{{cursoId}}", "host": ["{{baseUrl}}"], "path": ["api", "cursos", "{{cursoId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio\": 180000,\n  \"descripcion\": \"Curso completo de branding: estrategia de marca, diseño de identidad, manual corporativo y aplicaciones en medios digitales e impresos\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar curso",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/cursos/{{cursoId}}", "host": ["{{baseUrl}}"], "path": ["api", "cursos", "{{cursoId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar capítulo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cursos/{{cursoId}}/capitulos", "host": ["{{baseUrl}}"], "path": ["api", "cursos", "{{cursoId}}", "capitulos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"cap_1\",\n  \"orden\": 1,\n  \"titulo\": \"Introducción al Branding\",\n  \"video_url\": \"https://ejemplo.com/video1.mp4\",\n  \"recursos\": [\n    { \"nombre\": \"Guía de Branding PDF\", \"url\": \"https://ejemplo.com/guia.pdf\" }\n  ]\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🎙️ Transcripciones",
+      "item": [
+        {
+          "name": "Listar transcripciones",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/transcripciones", "host": ["{{baseUrl}}"], "path": ["api", "transcripciones"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear transcripción",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/transcripciones", "host": ["{{baseUrl}}"], "path": ["api", "transcripciones"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"trans_1\",\n  \"source_id\": \"cap_1\",\n  \"texto_completo\": \"En este capítulo exploramos los fundamentos del branding: identidad, posicionamiento y arquitectura de marca. El branding es mucho más que un logo; es la experiencia completa que una empresa proyecta.\",\n  \"lineas\": [\n    { \"minuto\": \"00:00\", \"texto\": \"En este capítulo exploramos los fundamentos del branding.\" },\n    { \"minuto\": \"00:30\", \"texto\": \"El branding es mucho más que un logo; es la experiencia completa.\" }\n  ]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener transcripción por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/transcripciones/{{transcripcionId}}", "host": ["{{baseUrl}}"], "path": ["api", "transcripciones", "{{transcripcionId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar transcripción",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/transcripciones/{{transcripcionId}}", "host": ["{{baseUrl}}"], "path": ["api", "transcripciones", "{{transcripcionId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"texto_completo\": \"Texto completo actualizado de la transcripción del capítulo de branding.\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar transcripción",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/transcripciones/{{transcripcionId}}", "host": ["{{baseUrl}}"], "path": ["api", "transcripciones", "{{transcripcionId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar línea a transcripción",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/transcripciones/{{transcripcionId}}/lineas", "host": ["{{baseUrl}}"], "path": ["api", "transcripciones", "{{transcripcionId}}", "lineas"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"minuto\": \"02:30\",\n  \"texto\": \"La consistencia visual es clave para el reconocimiento de marca en todos los puntos de contacto.\"\n}"
+            },
+            "description": "minuto debe tener formato MM:SS"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📋 Solicitudes",
+      "item": [
+        {
+          "name": "Listar solicitudes",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/solicitudes", "host": ["{{baseUrl}}"], "path": ["api", "solicitudes"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear solicitud",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/solicitudes", "host": ["{{baseUrl}}"], "path": ["api", "solicitudes"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"sol_1\",\n  \"usuario_id\": \"usr_3\",\n  \"oferta_asesoria_id\": \"oas_1\",\n  \"descripcion\": \"Necesito asesoría sobre cómo desarrollar mi portafolio de branding\",\n  \"hora_inicio\": \"10:00\",\n  \"hora_fin\": \"11:00\"\n}"
+            },
+            "description": "hora_inicio y hora_fin deben ser formato HH:MM"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener solicitud por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/solicitudes/{{solicitudId}}", "host": ["{{baseUrl}}"], "path": ["api", "solicitudes", "{{solicitudId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar solicitud",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/solicitudes/{{solicitudId}}", "host": ["{{baseUrl}}"], "path": ["api", "solicitudes", "{{solicitudId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Asesoría actualizada: portafolio de branding y estrategia de precios\",\n  \"hora_inicio\": \"11:00\",\n  \"hora_fin\": \"12:00\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado de solicitud",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/solicitudes/{{solicitudId}}/estado", "host": ["{{baseUrl}}"], "path": ["api", "solicitudes", "{{solicitudId}}", "estado"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"aprobada\"\n}"
+            },
+            "description": "estados válidos: pendiente, aprobada, rechazada, cancelada"
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar solicitud",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/solicitudes/{{solicitudId}}", "host": ["{{baseUrl}}"], "path": ["api", "solicitudes", "{{solicitudId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💳 Pagos",
+      "item": [
+        {
+          "name": "Listar pagos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/pagos", "host": ["{{baseUrl}}"], "path": ["api", "pagos"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear pago",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/pagos", "host": ["{{baseUrl}}"], "path": ["api", "pagos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"pag_1\",\n  \"tipo\": \"ASESORIA\",\n  \"source_id\": \"ase_1\",\n  \"user_id\": \"usr_3\",\n  \"monto\": 90000,\n  \"hora\": \"10:00\",\n  \"estado\": \"pendiente\"\n}"
+            },
+            "description": "tipo puede ser: ENCARGO, ASESORIA, CURSO. hora debe ser HH:MM."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener pago por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/pagos/{{pagoId}}", "host": ["{{baseUrl}}"], "path": ["api", "pagos", "{{pagoId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar pago",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/pagos/{{pagoId}}", "host": ["{{baseUrl}}"], "path": ["api", "pagos", "{{pagoId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monto\": 95000\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado de pago",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/pagos/{{pagoId}}/estado", "host": ["{{baseUrl}}"], "path": ["api", "pagos", "{{pagoId}}", "estado"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"pagado\"\n}"
+            },
+            "description": "estados válidos: pendiente, pagado, reembolsado, fallido"
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar pago",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/pagos/{{pagoId}}", "host": ["{{baseUrl}}"], "path": ["api", "pagos", "{{pagoId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🎓 Asesorías",
+      "item": [
+        {
+          "name": "Listar asesorías",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/asesorias", "host": ["{{baseUrl}}"], "path": ["api", "asesorias"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear asesoría",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/asesorias", "host": ["{{baseUrl}}"], "path": ["api", "asesorias"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"ase_1\",\n  \"pago_id\": \"pag_1\",\n  \"solicitud_id\": \"sol_1\",\n  \"link_reunion\": \"https://meet.google.com/abc-defg-hij\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener asesoría por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/asesorias/{{asesoriaId}}", "host": ["{{baseUrl}}"], "path": ["api", "asesorias", "{{asesoriaId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar asesoría",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/asesorias/{{asesoriaId}}", "host": ["{{baseUrl}}"], "path": ["api", "asesorias", "{{asesoriaId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"video_grabacion\": \"https://ejemplo.com/grabacion.mp4\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Asignar transcripción a asesoría",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/asesorias/{{asesoriaId}}/transcripcion", "host": ["{{baseUrl}}"], "path": ["api", "asesorias", "{{asesoriaId}}", "transcripcion"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transcripcion_id\": \"trans_1\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar asesoría",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/asesorias/{{asesoriaId}}", "host": ["{{baseUrl}}"], "path": ["api", "asesorias", "{{asesoriaId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔧 Encargos",
+      "item": [
+        {
+          "name": "Listar encargos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/encargos", "host": ["{{baseUrl}}"], "path": ["api", "encargos"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear encargo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/encargos", "host": ["{{baseUrl}}"], "path": ["api", "encargos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"encar_1\",\n  \"oferta_encargo_id\": \"enc_1\",\n  \"postulacion_id\": \"post_1\",\n  \"fecha_max\": \"2024-04-30\",\n  \"pago_id\": \"pag_2\",\n  \"retroalimentaciones_acordadas\": 3\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener encargo por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/encargos/{{encargoId}}", "host": ["{{baseUrl}}"], "path": ["api", "encargos", "{{encargoId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar encargo",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/encargos/{{encargoId}}", "host": ["{{baseUrl}}"], "path": ["api", "encargos", "{{encargoId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_max\": \"2024-05-15\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado de encargo",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/encargos/{{encargoId}}/estado", "host": ["{{baseUrl}}"], "path": ["api", "encargos", "{{encargoId}}", "estado"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"activo\"\n}"
+            },
+            "description": "estados válidos: inicio, activo, revision, finalizado, cancelado"
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar entrega",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/encargos/{{encargoId}}/entregas", "host": ["{{baseUrl}}"], "path": ["api", "encargos", "{{encargoId}}", "entregas"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"entr_1\",\n  \"titulo\": \"Primera entrega - Propuestas de logo\",\n  \"archivos\": [\n    \"https://ejemplo.com/propuesta1.pdf\",\n    \"https://ejemplo.com/propuesta2.pdf\"\n  ],\n  \"fecha\": \"2024-04-10\",\n  \"comentarios\": \"Se presentan 3 conceptos diferentes para revisión\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar retroalimentación",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/encargos/{{encargoId}}/retroalimentaciones", "host": ["{{baseUrl}}"], "path": ["api", "encargos", "{{encargoId}}", "retroalimentaciones"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"retro_1\",\n  \"titulo\": \"Retroalimentación #1\",\n  \"contenido\": \"Me gusta el concepto 2. Por favor ajustar la tipografía a algo más moderno y cambiar el color principal a azul marino.\",\n  \"numero\": 1\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar encargo",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/encargos/{{encargoId}}", "host": ["{{baseUrl}}"], "path": ["api", "encargos", "{{encargoId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔢 Vector Transcripciones",
+      "description": "Colección vector_transcripciones. POST auto-genera vector_embedding (384-dim MiniLM).",
+      "item": [
+        {
+          "name": "Buscar chunks por texto",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/vector/transcripciones/search?q=tipografía y color&estrategia=semantic_split_v1&limit=3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vector", "transcripciones", "search"],
+              "query": [
+                { "key": "q", "value": "tipografía y color" },
+                { "key": "estrategia", "value": "semantic_split_v1", "description": "fixed_size_v1 | semantic_split_v1 | sentence_window_v1 (opcional)" },
+                { "key": "limit", "value": "3" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar chunks",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/transcripciones", "host": ["{{baseUrl}}"], "path": ["api", "vector", "transcripciones"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear chunk (auto-vectoriza)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/vector/transcripciones", "host": ["{{baseUrl}}"], "path": ["api", "vector", "transcripciones"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"chk_nuevo_1\",\n  \"transcripcion_id\": \"trans_1\",\n  \"contenido_segmento\": \"La identidad visual de una marca debe ser consistente en todos sus puntos de contacto: digital, impreso y entorno físico.\",\n  \"metadata\": {\n    \"minuto_inicio\": 5,\n    \"minuto_fin\": 8,\n    \"estrategia_chunking\": \"semantic_split_v1\"\n  }\n}"
+            },
+            "description": "Genera vector_embedding (384-dim) automáticamente a partir de contenido_segmento."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener chunk por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/transcripciones/{{chunkId}}", "host": ["{{baseUrl}}"], "path": ["api", "vector", "transcripciones", "{{chunkId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar chunk",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/vector/transcripciones/{{chunkId}}", "host": ["{{baseUrl}}"], "path": ["api", "vector", "transcripciones", "{{chunkId}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔢 Vector Cursos",
+      "description": "Colección vector_cursos. POST auto-genera vector_embedding (384-dim MiniLM).",
+      "item": [
+        {
+          "name": "Buscar por texto",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/vector/cursos/search?q=diseño editorial y tipografía&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vector", "cursos", "search"],
+              "query": [
+                { "key": "q", "value": "diseño editorial y tipografía" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar vectores de cursos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/cursos", "host": ["{{baseUrl}}"], "path": ["api", "vector", "cursos"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear vector de curso (auto-vectoriza)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/vector/cursos", "host": ["{{baseUrl}}"], "path": ["api", "vector", "cursos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"vcur_1\",\n  \"curso_id\": \"cur_1\",\n  \"tipo\": \"DESCRIPCION\",\n  \"contenido\": \"Aprende a crear marcas poderosas desde cero: estrategia, diseño, manual y aplicaciones en medios digitales e impresos\"\n}"
+            },
+            "description": "tipo puede ser: DESCRIPCION, TEMARIO, OBJETIVO. Genera vector_embedding automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener vector de curso por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/cursos/vcur_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "cursos", "vcur_1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar vector de curso",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/vector/cursos/vcur_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "cursos", "vcur_1"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔢 Vector Perfil Creativo",
+      "description": "Colección vector_perfil_creativo. POST auto-genera vector_embedding (384-dim MiniLM).",
+      "item": [
+        {
+          "name": "Buscar perfiles por texto",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/vector/perfil/search?q=ilustrador especializado en marca&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vector", "perfil", "search"],
+              "query": [
+                { "key": "q", "value": "ilustrador especializado en marca" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar vectores de perfiles",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/perfil", "host": ["{{baseUrl}}"], "path": ["api", "vector", "perfil"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear vector de perfil (auto-vectoriza)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/vector/perfil", "host": ["{{baseUrl}}"], "path": ["api", "vector", "perfil"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"vp_1\",\n  \"perfil_creativo_id\": \"pc_1\",\n  \"tipo\": \"bio\",\n  \"contenido\": \"Diseñador gráfico con 5 años de experiencia en branding y diseño editorial para marcas nacionales e internacionales\",\n  \"estrategia_chunking\": \"semantic_split_v1\"\n}"
+            },
+            "description": "tipo puede ser: estilo, herramientas, bio, portafolio. Genera vector_embedding automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener vector de perfil por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/perfil/vp_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "perfil", "vp_1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar vector de perfil",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/vector/perfil/vp_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "perfil", "vp_1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Diseñador gráfico senior con 6 años de experiencia en branding, diseño editorial y motion graphics\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar vector de perfil",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/vector/perfil/vp_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "perfil", "vp_1"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔢 Vector Oferta Laboral",
+      "description": "Colección vector_oferta_laboral. CRUD básico.",
+      "item": [
+        {
+          "name": "Listar vectores de ofertas laborales",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/oferta-laboral", "host": ["{{baseUrl}}"], "path": ["api", "vector", "oferta-laboral"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear vector de oferta laboral",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/vector/oferta-laboral", "host": ["{{baseUrl}}"], "path": ["api", "vector", "oferta-laboral"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"vol_1\",\n  \"oferta_laboral_id\": \"ol_1\",\n  \"contenido\": \"Diseñador UX/UI Senior con experiencia en Figma y sistemas de diseño. Trabajo remoto.\",\n  \"vector_embedding\": [],\n  \"estrategia_chunking\": \"semantic_split_v1\"\n}"
+            },
+            "description": "vector_embedding debe ser un arreglo de 384 números (generado por el pipeline de embeddings externo)."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener vector de oferta laboral por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/vector/oferta-laboral/vol_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "oferta-laboral", "vol_1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar vector de oferta laboral",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/vector/oferta-laboral/vol_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "oferta-laboral", "vol_1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Diseñador UX/UI Senior con experiencia en Figma, sistemas de diseño y prototipado. Trabajo 100% remoto.\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar vector de oferta laboral",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/vector/oferta-laboral/vol_1", "host": ["{{baseUrl}}"], "path": ["api", "vector", "oferta-laboral", "vol_1"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "❤️ Health Check",
+      "item": [
+        {
+          "name": "Estado del servidor",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -2,14 +2,24 @@ import mongoose from 'mongoose';
 import Usuario from '../models/Usuarios.js';
 import PerfilCreativo from '../models/PerfilCreativo.js';
 import PerfilEmpresa from '../models/PerfilEmpresa.js';
-import { generarSiguienteId } from '../models/idGeneratorService.js';
+import { nuevoIdSecuencial } from '../utils/ids.js';
 
 const crearPerfilMinimo = async (tipo, userId, datosExtra = {}) => {
   if (tipo === 'CREATIVO') {
-    const _id = await generarSiguienteId('perfil_creativo', 'PC');
-    await new PerfilCreativo({ _id, user_id: userId, profesiones: [], habilidades: [], descripcion: '' }).save();
+    const _id = await nuevoIdSecuencial('perfil_creativo', datosExtra._id_perfil ?? null);
+    await new PerfilCreativo({
+      _id,
+      user_id: userId,
+      profesiones:  datosExtra.profesiones  ?? [],
+      habilidades:  datosExtra.habilidades  ?? [],
+      descripcion:  datosExtra.descripcion  || 'Perfil creativo en construcción',
+      experiencia:  datosExtra.experiencia  || '',
+      foto_perfil:  datosExtra.foto_perfil  || null,
+      rating_promedio: 0,
+      total_resenas:   0
+    }).save();
   } else if (tipo === 'EMPRESA') {
-    const _id = await generarSiguienteId('perfil_empresa', 'PE');
+    const _id = await nuevoIdSecuencial('perfil_empresa', datosExtra._id_perfil ?? null);
     await new PerfilEmpresa({
       _id,
       user_id: userId,
@@ -29,11 +39,12 @@ export const crear = async (req, res) => {
   try {
     const { nombre, telefono, correo, password, tipo_usuario, intereses, nit, sector, descripcion } = req.body;
 
-    const _id = await generarSiguienteId('usuarios', 'US');
+    const _id = await nuevoIdSecuencial('usuarios', req.body._id ?? null);
     const usuario = new Usuario({ _id, nombre, telefono, correo, password, tipo_usuario, intereses: intereses || [], fecha_registro: new Date() });
     await usuario.save();
 
-    await crearPerfilMinimo(tipo_usuario, _id, { nit, sector, descripcion });
+    // _id_perfil permite al seed controlar el ID del perfil auto-creado
+    await crearPerfilMinimo(tipo_usuario, _id, { nit, sector, descripcion, _id_perfil: req.body._id_perfil ?? null });
 
     const { password: _, ...respuesta } = usuario.toObject();
     res.status(201).json(respuesta);

@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 
 // RAG y búsqueda vectorial
@@ -31,11 +33,21 @@ import encargoRoutes             from './routes/encargoRoutes.js';
 // Middlewares
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const app = express();
 
 await connectDB();
 
 app.use(express.json());
+
+// Servir imágenes locales del dataset en /imagenes/<carpeta>/<archivo>
+const IMG_DIR = join(
+  __dirname, '..', 'data',
+  'Imágenes_Dataset_Kreato-20260608T030400Z-3-001',
+  'Imágenes_Dataset_Kreato'
+);
+app.use('/imagenes', express.static(IMG_DIR));
 
 // RAG y búsqueda vectorial
 app.use('/api',                          ragRoutes);

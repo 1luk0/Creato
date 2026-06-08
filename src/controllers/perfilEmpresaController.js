@@ -1,6 +1,6 @@
 import PerfilEmpresa from '../models/PerfilEmpresa.js';
 import Usuario from '../models/Usuarios.js';
-import { generarSiguienteId } from '../models/idGeneratorService.js';
+import { nuevoIdSecuencial } from '../utils/ids.js';
 
 export const crear = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ export const crear = async (req, res) => {
     const existe = await PerfilEmpresa.findOne({ user_id });
     if (existe) return res.status(409).json({ error: 'El usuario ya tiene un perfil empresa.' });
 
-    const _id = await generarSiguienteId('perfil_empresa', 'PE');
+    const _id = await nuevoIdSecuencial('perfil_empresa', req.body._id ?? null);
     const perfil = new PerfilEmpresa({ _id, user_id, nit, sector, descripcion, web, logo, verificado: false });
     await perfil.save();
 
