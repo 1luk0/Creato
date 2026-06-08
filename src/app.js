@@ -22,12 +22,30 @@ import vectorPerfilRoutes        from './routes/vectorPerfilRoutes.js';
 import publicacionesRoutes       from './routes/publicacionesRoutes.js';
 import perfilCreativoRoutes      from './routes/perfilCreativoRoutes.js';
 
+// Rutas del núcleo CRUD (colecciones de esta rama)
+import cursosRoutes              from './routes/cursosRoutes.js';
+import transcripcionesRoutes     from './routes/transcripcionesRoutes.js';
+import solicitudesRoutes         from './routes/solicitudesRoutes.js';
+import pagosRoutes               from './routes/pagosRoutes.js';
+import asesoriaRoutes            from './routes/asesoriaRoutes.js';
+import encargoRoutes             from './routes/encargoRoutes.js';
+
+// Middleware central de errores y 404
+import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
+
 app.use('/api',                          ragRoutes);
 app.use('/api/vector/transcripciones',   vectorTransRoutes);
 app.use('/api/vector/cursos',            vectorCursosRoutes);
 app.use('/api/vector/perfil',            vectorPerfilRoutes);
 app.use('/api/publicaciones',            publicacionesRoutes);
 app.use('/api/perfil-creativo',          perfilCreativoRoutes);
+
+app.use('/api/cursos',                   cursosRoutes);
+app.use('/api/transcripciones',          transcripcionesRoutes);
+app.use('/api/solicitudes',              solicitudesRoutes);
+app.use('/api/pagos',                    pagosRoutes);
+app.use('/api/asesorias',                asesoriaRoutes);
+app.use('/api/encargos',                 encargoRoutes);
 
 // Ruta base de prueba
 app.get('/', (req, res) => {
@@ -37,6 +55,11 @@ app.get('/', (req, res) => {
     timestamp: new Date()
   });
 });
+
+// 404 para rutas no registradas (después de todas las rutas).
+app.use(notFoundHandler);
+// Manejador central de errores (siempre el último middleware).
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
