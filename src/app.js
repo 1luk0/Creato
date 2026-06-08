@@ -1,37 +1,31 @@
-// src/app.js
-import 'dotenv/config'; // Inicializa las variables de entorno automáticamente
+import 'dotenv/config';
 import express from 'express';
-import connectDB from './config/db.js'; // Importación directa (asumiendo que usaste export default)
+import connectDB from './config/db.js';
 
+import usuariosRoutes from './routes/usuariosRoutes.js';
+import perfilCreativoRoutes from './routes/perfilCreativoRoutes.js';
+import perfilEmpresaRoutes from './routes/perfilEmpresaRoutes.js';
+import ofertaLaboralRoutes from './routes/ofertaLaboralRoutes.js';
+import comentariosRoutes from './routes/comentariosRoutes.js';
+import vectorPerfilRoutes from './routes/vectorPerfilRoutes.js';
+import vectorOfertaLaboralRoutes from './routes/vectorOfertaLaboralRoutes.js';
 
 const app = express();
 
-// Inicializar la conexión a Atlas (con el mismo nombre que importaste)
-await connectDB(); 
+await connectDB();
 
-// Middlewares estándar
 app.use(express.json());
 
-// Rutas RAG y búsqueda vectorial
-import ragRoutes                 from './routes/ragRoutes.js';
-import vectorTransRoutes         from './routes/vectortranscripcionesRoutes.js';
-import vectorCursosRoutes        from './routes/vectorCursosRoutes.js';
-import vectorPerfilRoutes        from './routes/vectorPerfilRoutes.js';
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/perfil-creativo', perfilCreativoRoutes);
+app.use('/api/perfil-empresa', perfilEmpresaRoutes);
+app.use('/api/oferta-laboral', ofertaLaboralRoutes);
+app.use('/api/comentarios', comentariosRoutes);
+app.use('/api/vector-perfil-creativo', vectorPerfilRoutes);
+app.use('/api/vector-oferta-laboral', vectorOfertaLaboralRoutes);
 
-// Rutas de entidades con auto-vectorización
-import publicacionesRoutes       from './routes/publicacionesRoutes.js';
-import perfilCreativoRoutes      from './routes/perfilCreativoRoutes.js';
-
-app.use('/api',                          ragRoutes);
-app.use('/api/vector/transcripciones',   vectorTransRoutes);
-app.use('/api/vector/cursos',            vectorCursosRoutes);
-app.use('/api/vector/perfil',            vectorPerfilRoutes);
-app.use('/api/publicaciones',            publicacionesRoutes);
-app.use('/api/perfil-creativo',          perfilCreativoRoutes);
-
-// Ruta base de prueba
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     status: "online",
     message: "Backend de Agencia de Diseño y Sistema RAG activo 🚀",
     timestamp: new Date()

@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import { searchPerfil, crear, obtenerTodos, obtenerPorId, actualizar, eliminar } from '../controllers/vectorPerfilCreativoController.js';
+import { crear, obtenerTodos, obtenerPorId, actualizar, eliminar } from '../controllers/vectorOfertaLaboralController.js';
 
 const router = Router();
 
-router.get('/search', searchPerfil);
 router.post('/', crear);
 router.get('/', obtenerTodos);
 router.get('/:id', obtenerPorId);
