@@ -1,9 +1,10 @@
 import { Router } from 'express';
+import { asyncHandler } from '../utils/asyncHandler.js';
 import { crearPerfil, obtenerPerfil } from '../controllers/perfilCreativoController.js';
 
 const router = Router();
 
-router.post('/',     crearPerfil);
-router.get('/:id',   obtenerPerfil);
+router.post('/',    asyncHandler(crearPerfil));
+router.get('/:id',  asyncHandler(obtenerPerfil));
 
 export default router;
