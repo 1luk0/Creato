@@ -2,13 +2,31 @@ import 'dotenv/config';
 import express from 'express';
 import connectDB from './config/db.js';
 
-import usuariosRoutes from './routes/usuariosRoutes.js';
-import perfilCreativoRoutes from './routes/perfilCreativoRoutes.js';
-import perfilEmpresaRoutes from './routes/perfilEmpresaRoutes.js';
-import ofertaLaboralRoutes from './routes/ofertaLaboralRoutes.js';
-import comentariosRoutes from './routes/comentariosRoutes.js';
-import vectorPerfilRoutes from './routes/vectorPerfilRoutes.js';
+// RAG y búsqueda vectorial
+import ragRoutes                 from './routes/ragRoutes.js';
+import vectorTransRoutes         from './routes/vectortranscripcionesRoutes.js';
+import vectorCursosRoutes        from './routes/vectorCursosRoutes.js';
+import vectorPerfilRoutes        from './routes/vectorPerfilRoutes.js';
 import vectorOfertaLaboralRoutes from './routes/vectorOfertaLaboralRoutes.js';
+
+// Entidades con auto-vectorización
+import publicacionesRoutes       from './routes/publicacionesRoutes.js';
+import perfilCreativoRoutes      from './routes/perfilCreativoRoutes.js';
+
+// CRUD
+import usuariosRoutes            from './routes/usuariosRoutes.js';
+import perfilEmpresaRoutes       from './routes/perfilEmpresaRoutes.js';
+import ofertaLaboralRoutes       from './routes/ofertaLaboralRoutes.js';
+import comentariosRoutes         from './routes/comentariosRoutes.js';
+import cursosRoutes              from './routes/cursosRoutes.js';
+import transcripcionesRoutes     from './routes/transcripcionesRoutes.js';
+import solicitudesRoutes         from './routes/solicitudesRoutes.js';
+import pagosRoutes               from './routes/pagosRoutes.js';
+import asesoriaRoutes            from './routes/asesoriaRoutes.js';
+import encargoRoutes             from './routes/encargoRoutes.js';
+
+// Middlewares
+import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 
 const app = express();
 
@@ -16,14 +34,30 @@ await connectDB();
 
 app.use(express.json());
 
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/perfil-creativo', perfilCreativoRoutes);
-app.use('/api/perfil-empresa', perfilEmpresaRoutes);
-app.use('/api/oferta-laboral', ofertaLaboralRoutes);
-app.use('/api/comentarios', comentariosRoutes);
-app.use('/api/vector-perfil-creativo', vectorPerfilRoutes);
-app.use('/api/vector-oferta-laboral', vectorOfertaLaboralRoutes);
+// RAG y búsqueda vectorial
+app.use('/api',                          ragRoutes);
+app.use('/api/vector/transcripciones',   vectorTransRoutes);
+app.use('/api/vector/cursos',            vectorCursosRoutes);
+app.use('/api/vector/perfil',            vectorPerfilRoutes);
+app.use('/api/vector/oferta-laboral',    vectorOfertaLaboralRoutes);
 
+// Entidades con vectorización automática al crear
+app.use('/api/publicaciones',            publicacionesRoutes);
+app.use('/api/perfil-creativo',          perfilCreativoRoutes);
+
+// CRUD general
+app.use('/api/usuarios',                 usuariosRoutes);
+app.use('/api/perfil-empresa',           perfilEmpresaRoutes);
+app.use('/api/oferta-laboral',           ofertaLaboralRoutes);
+app.use('/api/comentarios',              comentariosRoutes);
+app.use('/api/cursos',                   cursosRoutes);
+app.use('/api/transcripciones',          transcripcionesRoutes);
+app.use('/api/solicitudes',              solicitudesRoutes);
+app.use('/api/pagos',                    pagosRoutes);
+app.use('/api/asesorias',                asesoriaRoutes);
+app.use('/api/encargos',                 encargoRoutes);
+
+// Health check
 app.get('/', (req, res) => {
   res.json({
     status: "online",
@@ -31,6 +65,9 @@ app.get('/', (req, res) => {
     timestamp: new Date()
   });
 });
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
