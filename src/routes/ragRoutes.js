@@ -6,11 +6,13 @@ import {
   searchCreativos,
   searchByImage,
   searchMultimodal,
+  compararEstrategias,
 } from '../controllers/ragController.js';
 
 const router = Router();
 
 router.post('/rag',                          rag);
+router.post('/rag/comparar',                 compararEstrategias);
 router.post('/search/transcripciones',       searchTranscripciones);
 router.post('/search/cursos',                searchCursos);
 router.post('/search/creativos',             searchCreativos);

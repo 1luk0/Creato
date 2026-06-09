@@ -53,3 +53,44 @@ export async function embed(texto) {
   console.log(`[embeddingService] ✅ vector generado — ${vector.length} dims | primeros 3: [${vector.slice(0, 3).map(v => v.toFixed(4)).join(', ')}]`);
   return vector;
 }
+
+// Envía N textos en una sola llamada a HF y devuelve un array de vectores.
+export async function embedBatch(textos) {
+  if (!Array.isArray(textos) || textos.length === 0) {
+    throw new Error('embedBatch() requiere un array no vacío');
+  }
+
+  const limpios = textos.map(t => (t ?? '').trim()).filter(Boolean);
+  if (limpios.length === 0) throw new Error('embedBatch() todos los textos son vacíos');
+
+  console.log(`[embeddingService] embedBatch() — ${limpios.length} textos`);
+
+  const res = await fetch(HF_URL, {
+    method:  'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.HF_API_TOKEN}`,
+      'Content-Type':  'application/json'
+    },
+    body: JSON.stringify({ inputs: limpios })
+  });
+
+  if (res.status === 503) {
+    const { estimated_time } = await res.json();
+    const espera = Math.ceil((estimated_time ?? 20) * 1000);
+    console.log(`[embeddingService] ⏳ Modelo cargando — reintentando batch en ${espera / 1000}s...`);
+    await new Promise(r => setTimeout(r, espera));
+    return embedBatch(textos);
+  }
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`HF API batch ${res.status}: ${body}`);
+  }
+
+  const data = await res.json();
+  // La API devuelve [[vec1], [vec2], ...] o [vec1, vec2, ...]
+  const vectores = data.map(item => Array.isArray(item[0]) ? item[0] : item);
+
+  console.log(`[embeddingService] ✅ embedBatch — ${vectores.length} vectores de ${vectores[0]?.length} dims`);
+  return vectores;
+}

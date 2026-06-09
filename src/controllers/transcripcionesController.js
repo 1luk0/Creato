@@ -2,6 +2,7 @@ import Transcripciones from '../models/Transcripciones.js';
 import { nuevoIdSecuencial } from '../utils/ids.js';
 import { buscarPorId, existeCapituloEnCursos } from '../utils/referencias.js';
 import { httpError } from '../utils/httpError.js';
+import { procesarTranscripcion, procesarTodasEstrategias } from '../services/ingestaService.js';
 
 const COLECCION = 'transcripciones';
 const FORMATO_MINUTO = /^\d{2}:\d{2}$/;
@@ -74,6 +75,24 @@ export const eliminarTranscripcion = async (req, res) => {
   const trans = await Transcripciones.findByIdAndDelete(req.params.id);
   if (!trans) throw httpError(404, 'Transcripción no encontrada');
   res.status(204).send();
+};
+
+// POST /api/transcripciones/:id/procesar
+// Si se envía { estrategia } procesa solo esa; si no, procesa las 3.
+const ESTRATEGIAS_VALIDAS = ['fixed_size_v1', 'sentence_window_v1', 'semantic_split_v1'];
+
+export const procesarChunks = async (req, res) => {
+  const { estrategia } = req.body ?? {};
+
+  if (estrategia && !ESTRATEGIAS_VALIDAS.includes(estrategia)) {
+    throw httpError(400, `Estrategia inválida. Permitidas: ${ESTRATEGIAS_VALIDAS.join(', ')}`);
+  }
+
+  const resultado = estrategia
+    ? await procesarTranscripcion(req.params.id, estrategia)
+    : await procesarTodasEstrategias(req.params.id);
+
+  res.json(resultado);
 };
 
 // POST /api/transcripciones/:id/lineas — agrega una línea embebida.
