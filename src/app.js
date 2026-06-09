@@ -27,6 +27,7 @@ import solicitudesRoutes         from './routes/solicitudesRoutes.js';
 import pagosRoutes               from './routes/pagosRoutes.js';
 import asesoriaRoutes            from './routes/asesoriaRoutes.js';
 import encargoRoutes             from './routes/encargoRoutes.js';
+import consultasRoutes           from './routes/consultasRoutes.js';
 
 // Middlewares
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
@@ -62,6 +63,7 @@ app.use('/api/solicitudes',              solicitudesRoutes);
 app.use('/api/pagos',                    pagosRoutes);
 app.use('/api/asesorias',                asesoriaRoutes);
 app.use('/api/encargos',                 encargoRoutes);
+app.use('/api/consultas',                consultasRoutes);
 
 // Health check
 app.get('/', (req, res) => {
