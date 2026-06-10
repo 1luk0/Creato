@@ -7,6 +7,8 @@ import {
   retrieveTextToImage,
 } from '../services/ragService.js';
 
+const ESTRATEGIAS = ['fixed_size_v1', 'sentence_window_v1', 'semantic_split_v1'];
+
 // POST /api/rag
 export async function rag(req, res) {
   console.log(`\n[ragController] ── POST /api/rag ──`);
@@ -108,6 +110,40 @@ export async function searchByImage(req, res) {
     const resultados = await retrieveByImage(image_url, limit);
     console.log(`[ragController] ✅ ${resultados.length} publicaciones similares enviadas`);
     res.json({ image_url, resultados });
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
+  }
+}
+
+// POST /api/rag/comparar
+// Ejecuta la misma query contra las 3 estrategias y devuelve resultados side-by-side.
+export async function compararEstrategias(req, res) {
+  console.log(`\n[ragController] ── POST /api/rag/comparar ──`);
+  console.log(`[ragController]   body: ${JSON.stringify(req.body)}`);
+
+  const { query, limit = 5 } = req.body ?? {};
+  if (!query) {
+    return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+  }
+
+  try {
+    const resultados = {};
+    const metricas   = {};
+
+    for (const estrategia of ESTRATEGIAS) {
+      const chunks = await retrieve(query, estrategia, Number(limit));
+      resultados[estrategia] = chunks;
+      metricas[estrategia] = {
+        chunks_recuperados: chunks.length,
+        score_promedio: chunks.length
+          ? Number((chunks.reduce((s, c) => s + (c.score ?? 0), 0) / chunks.length).toFixed(4))
+          : 0
+      };
+    }
+
+    console.log(`[ragController] ✅ comparación completada`);
+    res.json({ query, limit: Number(limit), resultados, metricas });
   } catch (e) {
     console.error(`[ragController] ❌ Error: ${e.message}`);
     res.status(500).json({ error: e.message });
