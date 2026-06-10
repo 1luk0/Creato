@@ -190,6 +190,119 @@ export async function retrieveByImage(imageUrl, limit = 5) {
   return resultados;
 }
 
+// Analiza el rendimiento de las 3 estrategias de chunking con UNA sola llamada a vectorSearch.
+// Agrupa los top-N resultados por estrategia y cruza con stats globales de los chunks en DB.
+export async function analizarChunking(queryText, topN = 50) {
+  console.log(`\n[ragService] ══ analizarChunking() ══`);
+  console.log(`[ragService]   query: "${queryText}" | topN: ${topN}`);
+
+  const queryVector = await embed(queryText);
+  console.log(`[ragService]   ✅ query embeddida — ${queryVector.length} dims`);
+
+  // ── Pipeline: 1 vectorSearch → project score → group por estrategia ──────
+  const pipeline = [
+    {
+      $vectorSearch: {
+        index:         VECTOR_INDEX,
+        path:          'vector_embedding',
+        queryVector,
+        numCandidates: Math.max(topN * 3, 150),
+        limit:         topN,
+      }
+    },
+    {
+      $project: {
+        estrategia: '$metadata.estrategia_chunking',
+        score:      { $meta: 'vectorSearchScore' },
+        longitud:   { $strLenCP: '$contenido_segmento' },
+        segmento:   { $substr: ['$contenido_segmento', 0, 120] },
+      }
+    },
+    {
+      $group: {
+        _id:                  '$estrategia',
+        en_top:               { $sum: 1 },
+        score_ponderado:      { $avg: '$score' },
+        score_max:            { $max: '$score' },
+        score_min:            { $min: '$score' },
+        longitud_promedio_top:{ $avg: '$longitud' },
+        mejor_chunk:          { $first: '$segmento' },
+      }
+    },
+    { $sort: { score_ponderado: -1 } }
+  ];
+
+  console.log(`[ragService]   🔍 ejecutando pipeline (vectorSearch → group)...`);
+  const porEstrategia = await VectorTranscripciones.aggregate(pipeline);
+  console.log(`[ragService]   ✅ ${porEstrategia.length} estrategias en top-${topN}`);
+
+  // ── Stats globales (sin vectorSearch — solo aggregate sobre la colección) ──
+  const statsGlobales = await VectorTranscripciones.aggregate([
+    {
+      $group: {
+        _id:           '$metadata.estrategia_chunking',
+        total_chunks:  { $sum: 1 },
+        longitud_prom: { $avg: { $strLenCP: '$contenido_segmento' } },
+        longitud_max:  { $max: { $strLenCP: '$contenido_segmento' } },
+        longitud_min:  { $min: { $strLenCP: '$contenido_segmento' } },
+      }
+    }
+  ]);
+
+  const statsMap = Object.fromEntries(statsGlobales.map(s => [s._id, s]));
+
+  // ── Combinar resultados ───────────────────────────────────────────────────
+  const ranking = porEstrategia.map((e, i) => {
+    const g = statsMap[e._id] ?? {};
+    const resultado = {
+      posicion:              i + 1,
+      estrategia:            e._id,
+      en_top:                e.en_top,
+      porcentaje_top:        Number(((e.en_top / topN) * 100).toFixed(1)),
+      score_ponderado:       Number(e.score_ponderado.toFixed(4)),
+      score_max:             Number(e.score_max.toFixed(4)),
+      score_min:             Number(e.score_min.toFixed(4)),
+      longitud_promedio_top: Math.round(e.longitud_promedio_top),
+      mejor_fragmento:       e.mejor_chunk,
+      stats_globales: {
+        total_chunks:   g.total_chunks  ?? 0,
+        longitud_prom:  Math.round(g.longitud_prom  ?? 0),
+        longitud_max:   g.longitud_max  ?? 0,
+        longitud_min:   g.longitud_min  ?? 0,
+      }
+    };
+    console.log(`[ragService]   [${i+1}] ${e._id} — en_top: ${e.en_top}/${topN} (${resultado.porcentaje_top}%) | score_pond: ${resultado.score_ponderado}`);
+    return resultado;
+  });
+
+  // Añadir estrategias con 0 resultados en top (existen en DB pero no aparecieron)
+  for (const [estrategia, g] of Object.entries(statsMap)) {
+    if (!ranking.find(r => r.estrategia === estrategia)) {
+      ranking.push({
+        posicion:              ranking.length + 1,
+        estrategia,
+        en_top:                0,
+        porcentaje_top:        0,
+        score_ponderado:       0,
+        score_max:             0,
+        score_min:             0,
+        longitud_promedio_top: 0,
+        mejor_fragmento:       null,
+        stats_globales: {
+          total_chunks:  g.total_chunks,
+          longitud_prom: Math.round(g.longitud_prom),
+          longitud_max:  g.longitud_max,
+          longitud_min:  g.longitud_min,
+        }
+      });
+      console.log(`[ragService]   [—] ${estrategia} — no apareció en el top-${topN}`);
+    }
+  }
+
+  console.log(`[ragService] ══ analizarChunking() FIN ══\n`);
+  return { queryVector_dims: queryVector.length, topN, ranking };
+}
+
 export async function retrieveTextToImage(texto, limit = 5) {
   console.log(`[ragService] retrieveTextToImage() — texto: "${texto}" | limit: ${limit}`);
 

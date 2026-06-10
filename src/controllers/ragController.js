@@ -5,6 +5,7 @@ import {
   retrieveCursos,
   retrieveByImage,
   retrieveTextToImage,
+  analizarChunking,
 } from '../services/ragService.js';
 
 const ESTRATEGIAS = ['fixed_size_v1', 'sentence_window_v1', 'semantic_split_v1'];
@@ -117,6 +118,35 @@ export async function searchByImage(req, res) {
     console.error(`[ragController] ❌ Error en searchByImage: ${e.message}`);
     console.error(e.stack);
     res.status(500).json({ error: e.message, stack: e.stack?.split('\n').slice(0,4) });
+  }
+}
+
+// POST /api/rag/chunking-analysis
+// Una sola llamada vectorSearch: agrupa top-N por estrategia y cruza con stats globales.
+export async function chunkingAnalysis(req, res) {
+  console.log(`\n[ragController] ── POST /api/rag/chunking-analysis ──`);
+  const { query, top_n = 50 } = req.body ?? {};
+  if (!query) return res.status(400).json({ error: 'El campo "query" es obligatorio' });
+
+  const topN = Math.min(Math.max(Number(top_n), 10), 150);
+  console.log(`[ragController]   query: "${query}" | top_n: ${topN}`);
+
+  try {
+    const { queryVector_dims, topN: n, ranking } = await analizarChunking(query, topN);
+
+    const ganador = ranking[0];
+    const conclusion = ganador
+      ? `"${ganador.estrategia}" lidera con score ponderado ${ganador.score_ponderado} ` +
+        `(${ganador.en_top}/${n} chunks en top, ${ganador.porcentaje_top}% de presencia). ` +
+        `Longitud promedio de sus chunks: ${ganador.stats_globales.longitud_prom} chars ` +
+        `(${ganador.stats_globales.total_chunks} chunks totales en la colección).`
+      : 'Sin resultados para esta consulta.';
+
+    console.log(`[ragController] ✅ análisis completado — ganador: ${ganador?.estrategia}`);
+    res.json({ query, top_n: n, queryVector_dims, ranking, conclusion });
+  } catch (e) {
+    console.error(`[ragController] ❌ Error: ${e.message}`);
+    res.status(500).json({ error: e.message });
   }
 }
 
