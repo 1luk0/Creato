@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 
 // RAG y búsqueda vectorial
@@ -32,11 +34,17 @@ import consultasRoutes           from './routes/consultasRoutes.js';
 // Middlewares
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const app = express();
 
 await connectDB();
 
 app.use(express.json());
+
+// Servir imágenes locales del dataset en /imagenes/<carpeta>/<archivo>
+const IMG_DIR = join(__dirname, '..', 'data', 'Imagenes');
+app.use('/imagenes', express.static(IMG_DIR));
 
 // RAG y búsqueda vectorial
 app.use('/api',                          ragRoutes);

@@ -1,7 +1,7 @@
 import OfertaLaboral from '../models/OfertaLaboral.js';
 import PerfilEmpresa from '../models/PerfilEmpresa.js';
 import Usuario from '../models/Usuarios.js';
-import { generarSiguienteId } from '../models/idGeneratorService.js';
+import { nuevoIdSecuencial } from '../utils/ids.js';
 
 export const crear = async (req, res) => {
   try {
@@ -10,7 +10,7 @@ export const crear = async (req, res) => {
     const perfil = await PerfilEmpresa.findById(perfil_empresa_id);
     if (!perfil) return res.status(404).json({ error: 'Perfil empresa no encontrado.' });
 
-    const _id = await generarSiguienteId('oferta_laboral', 'OL');
+    const _id = await nuevoIdSecuencial('oferta_laboral', req.body._id ?? null);
     const oferta = new OfertaLaboral({ _id, perfil_empresa_id, cargo, descripcion, presupuesto, postulados: [], estado: 'activa' });
     await oferta.save();
 

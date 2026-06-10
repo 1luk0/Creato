@@ -1,0 +1,1532 @@
+[
+  {
+    "_id": "cur_201",
+    "nombre": "Dominando la Luz en Digital",
+    "descripcion": "Curso avanzado sobre teoría del color, iluminación y volumen en pintura digital.",
+    "vector_contenido": [],
+    "precio": 89.99,
+    "categorias": [
+      "Pintura Digital"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.7,
+    "total_resenas": 312,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2001",
+        "orden": 1,
+        "titulo": "Teoría de la luz ambiental",
+        "video_url": "https://cdn.kreato/videos/cap_2001_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Teoría de la luz ambiental",
+            "url": "https://cdn.kreato/recursos/cap_2001.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2002",
+        "orden": 2,
+        "titulo": "Color y temperatura",
+        "video_url": "https://cdn.kreato/videos/cap_2002_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Color y temperatura",
+            "url": "https://cdn.kreato/recursos/cap_2002.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2003",
+        "orden": 3,
+        "titulo": "Sombras y volumen",
+        "video_url": "https://cdn.kreato/videos/cap_2003_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Sombras y volumen",
+            "url": "https://cdn.kreato/recursos/cap_2003.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2004",
+        "orden": 4,
+        "titulo": "Modos de fusión",
+        "video_url": "https://cdn.kreato/videos/cap_2004_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Modos de fusión",
+            "url": "https://cdn.kreato/recursos/cap_2004.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2005",
+        "orden": 5,
+        "titulo": "Texturas y pinceles",
+        "video_url": "https://cdn.kreato/videos/cap_2005_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Texturas y pinceles",
+            "url": "https://cdn.kreato/recursos/cap_2005.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2006",
+        "orden": 6,
+        "titulo": "Composición",
+        "video_url": "https://cdn.kreato/videos/cap_2006_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Composición",
+            "url": "https://cdn.kreato/recursos/cap_2006.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_202",
+    "nombre": "Modelado 3D Profesional",
+    "descripcion": "Pipeline completo de modelado 3D: topología, UV, esculpido y texturizado PBR.",
+    "vector_contenido": [],
+    "precio": 109.99,
+    "categorias": [
+      "Modelado 3D"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.6,
+    "total_resenas": 188,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2007",
+        "orden": 1,
+        "titulo": "Topología limpia",
+        "video_url": "https://cdn.kreato/videos/cap_2007_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Topología limpia",
+            "url": "https://cdn.kreato/recursos/cap_2007.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2008",
+        "orden": 2,
+        "titulo": "Mapeo UV",
+        "video_url": "https://cdn.kreato/videos/cap_2008_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Mapeo UV",
+            "url": "https://cdn.kreato/recursos/cap_2008.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2009",
+        "orden": 3,
+        "titulo": "Esculpido digital",
+        "video_url": "https://cdn.kreato/videos/cap_2009_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Esculpido digital",
+            "url": "https://cdn.kreato/recursos/cap_2009.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2010",
+        "orden": 4,
+        "titulo": "Retopología",
+        "video_url": "https://cdn.kreato/videos/cap_2010_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Retopología",
+            "url": "https://cdn.kreato/recursos/cap_2010.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2011",
+        "orden": 5,
+        "titulo": "Modelado hard surface",
+        "video_url": "https://cdn.kreato/videos/cap_2011_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Modelado hard surface",
+            "url": "https://cdn.kreato/recursos/cap_2011.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2012",
+        "orden": 6,
+        "titulo": "Texturizado PBR",
+        "video_url": "https://cdn.kreato/videos/cap_2012_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Texturizado PBR",
+            "url": "https://cdn.kreato/recursos/cap_2012.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_203",
+    "nombre": "Diseño de Producto Digital",
+    "descripcion": "De la investigación de usuarios al prototipo: diseño de interfaces centradas en las personas.",
+    "vector_contenido": [],
+    "precio": 99.99,
+    "categorias": [
+      "Diseño de Producto"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.8,
+    "total_resenas": 421,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2013",
+        "orden": 1,
+        "titulo": "Investigación de usuarios",
+        "video_url": "https://cdn.kreato/videos/cap_2013_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Investigación de usuarios",
+            "url": "https://cdn.kreato/recursos/cap_2013.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2014",
+        "orden": 2,
+        "titulo": "Wireframing",
+        "video_url": "https://cdn.kreato/videos/cap_2014_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Wireframing",
+            "url": "https://cdn.kreato/recursos/cap_2014.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2015",
+        "orden": 3,
+        "titulo": "Sistemas de diseño",
+        "video_url": "https://cdn.kreato/videos/cap_2015_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Sistemas de diseño",
+            "url": "https://cdn.kreato/recursos/cap_2015.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2016",
+        "orden": 4,
+        "titulo": "Prototipado",
+        "video_url": "https://cdn.kreato/videos/cap_2016_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Prototipado",
+            "url": "https://cdn.kreato/recursos/cap_2016.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2017",
+        "orden": 5,
+        "titulo": "Accesibilidad",
+        "video_url": "https://cdn.kreato/videos/cap_2017_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Accesibilidad",
+            "url": "https://cdn.kreato/recursos/cap_2017.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2018",
+        "orden": 6,
+        "titulo": "Pruebas de usabilidad",
+        "video_url": "https://cdn.kreato/videos/cap_2018_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Pruebas de usabilidad",
+            "url": "https://cdn.kreato/recursos/cap_2018.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_204",
+    "nombre": "Ilustración para Concept Art",
+    "descripcion": "Fundamentos de dibujo aplicados al concept art: anatomía, perspectiva y diseño.",
+    "vector_contenido": [],
+    "precio": 94.99,
+    "categorias": [
+      "Ilustración"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.7,
+    "total_resenas": 265,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2019",
+        "orden": 1,
+        "titulo": "Anatomía para artistas",
+        "video_url": "https://cdn.kreato/videos/cap_2019_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Anatomía para artistas",
+            "url": "https://cdn.kreato/recursos/cap_2019.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2020",
+        "orden": 2,
+        "titulo": "Gesto y movimiento",
+        "video_url": "https://cdn.kreato/videos/cap_2020_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Gesto y movimiento",
+            "url": "https://cdn.kreato/recursos/cap_2020.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2021",
+        "orden": 3,
+        "titulo": "Perspectiva",
+        "video_url": "https://cdn.kreato/videos/cap_2021_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Perspectiva",
+            "url": "https://cdn.kreato/recursos/cap_2021.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2022",
+        "orden": 4,
+        "titulo": "Diseño de entornos",
+        "video_url": "https://cdn.kreato/videos/cap_2022_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de entornos",
+            "url": "https://cdn.kreato/recursos/cap_2022.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2023",
+        "orden": 5,
+        "titulo": "Diseño de personajes",
+        "video_url": "https://cdn.kreato/videos/cap_2023_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de personajes",
+            "url": "https://cdn.kreato/recursos/cap_2023.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2024",
+        "orden": 6,
+        "titulo": "Narrativa visual",
+        "video_url": "https://cdn.kreato/videos/cap_2024_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Narrativa visual",
+            "url": "https://cdn.kreato/recursos/cap_2024.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_205",
+    "nombre": "Edición de Video y Postproducción",
+    "descripcion": "Montaje, color, audio y efectos para llevar tu material en bruto a una pieza terminada.",
+    "vector_contenido": [],
+    "precio": 119.99,
+    "categorias": [
+      "Audiovisual"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.5,
+    "total_resenas": 203,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2025",
+        "orden": 1,
+        "titulo": "Montaje y ritmo",
+        "video_url": "https://cdn.kreato/videos/cap_2025_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Montaje y ritmo",
+            "url": "https://cdn.kreato/recursos/cap_2025.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2026",
+        "orden": 2,
+        "titulo": "Corrección de color",
+        "video_url": "https://cdn.kreato/videos/cap_2026_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Corrección de color",
+            "url": "https://cdn.kreato/recursos/cap_2026.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2027",
+        "orden": 3,
+        "titulo": "Audio y mezcla",
+        "video_url": "https://cdn.kreato/videos/cap_2027_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Audio y mezcla",
+            "url": "https://cdn.kreato/recursos/cap_2027.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2028",
+        "orden": 4,
+        "titulo": "Transiciones",
+        "video_url": "https://cdn.kreato/videos/cap_2028_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Transiciones",
+            "url": "https://cdn.kreato/recursos/cap_2028.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2029",
+        "orden": 5,
+        "titulo": "Efectos visuales",
+        "video_url": "https://cdn.kreato/videos/cap_2029_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Efectos visuales",
+            "url": "https://cdn.kreato/recursos/cap_2029.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2030",
+        "orden": 6,
+        "titulo": "Exportación y formatos",
+        "video_url": "https://cdn.kreato/videos/cap_2030_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Exportación y formatos",
+            "url": "https://cdn.kreato/recursos/cap_2030.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_206",
+    "nombre": "Animación 2D desde Cero",
+    "descripcion": "Los principios de la animación aplicados paso a paso, del timing al rigging 2D.",
+    "vector_contenido": [],
+    "precio": 84.99,
+    "categorias": [
+      "Animación"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.6,
+    "total_resenas": 174,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2031",
+        "orden": 1,
+        "titulo": "Principios de animación",
+        "video_url": "https://cdn.kreato/videos/cap_2031_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Principios de animación",
+            "url": "https://cdn.kreato/recursos/cap_2031.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2032",
+        "orden": 2,
+        "titulo": "Timing y spacing",
+        "video_url": "https://cdn.kreato/videos/cap_2032_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Timing y spacing",
+            "url": "https://cdn.kreato/recursos/cap_2032.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2033",
+        "orden": 3,
+        "titulo": "Ciclo de caminata",
+        "video_url": "https://cdn.kreato/videos/cap_2033_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Ciclo de caminata",
+            "url": "https://cdn.kreato/recursos/cap_2033.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2034",
+        "orden": 4,
+        "titulo": "Animación pose a pose",
+        "video_url": "https://cdn.kreato/videos/cap_2034_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Animación pose a pose",
+            "url": "https://cdn.kreato/recursos/cap_2034.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2035",
+        "orden": 5,
+        "titulo": "Rigging 2D",
+        "video_url": "https://cdn.kreato/videos/cap_2035_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Rigging 2D",
+            "url": "https://cdn.kreato/recursos/cap_2035.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2036",
+        "orden": 6,
+        "titulo": "Sincronía labial",
+        "video_url": "https://cdn.kreato/videos/cap_2036_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Sincronía labial",
+            "url": "https://cdn.kreato/recursos/cap_2036.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_207",
+    "nombre": "Concept Art para Cine y Juegos",
+    "descripcion": "Diseño de criaturas, props y entornos con criterio cinematográfico.",
+    "vector_contenido": [],
+    "precio": 124.99,
+    "categorias": [
+      "Concept Art"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.8,
+    "total_resenas": 298,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2037",
+        "orden": 1,
+        "titulo": "Thumbnailing",
+        "video_url": "https://cdn.kreato/videos/cap_2037_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Thumbnailing",
+            "url": "https://cdn.kreato/recursos/cap_2037.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2038",
+        "orden": 2,
+        "titulo": "Diseño de criaturas",
+        "video_url": "https://cdn.kreato/videos/cap_2038_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de criaturas",
+            "url": "https://cdn.kreato/recursos/cap_2038.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2039",
+        "orden": 3,
+        "titulo": "Diseño de props",
+        "video_url": "https://cdn.kreato/videos/cap_2039_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de props",
+            "url": "https://cdn.kreato/recursos/cap_2039.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2040",
+        "orden": 4,
+        "titulo": "Matte painting",
+        "video_url": "https://cdn.kreato/videos/cap_2040_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Matte painting",
+            "url": "https://cdn.kreato/recursos/cap_2040.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2041",
+        "orden": 5,
+        "titulo": "Iluminación cinematográfica",
+        "video_url": "https://cdn.kreato/videos/cap_2041_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Iluminación cinematográfica",
+            "url": "https://cdn.kreato/recursos/cap_2041.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2042",
+        "orden": 6,
+        "titulo": "Diseño de vehículos",
+        "video_url": "https://cdn.kreato/videos/cap_2042_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de vehículos",
+            "url": "https://cdn.kreato/recursos/cap_2042.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_208",
+    "nombre": "Motion Graphics Esencial",
+    "descripcion": "Animación de gráficos, tipografía cinética y composición por capas.",
+    "vector_contenido": [],
+    "precio": 89.99,
+    "categorias": [
+      "Motion Graphics"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.5,
+    "total_resenas": 159,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2043",
+        "orden": 1,
+        "titulo": "Fotogramas clave",
+        "video_url": "https://cdn.kreato/videos/cap_2043_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Fotogramas clave",
+            "url": "https://cdn.kreato/recursos/cap_2043.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2044",
+        "orden": 2,
+        "titulo": "Curvas de animación",
+        "video_url": "https://cdn.kreato/videos/cap_2044_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Curvas de animación",
+            "url": "https://cdn.kreato/recursos/cap_2044.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2045",
+        "orden": 3,
+        "titulo": "Tipografía cinética",
+        "video_url": "https://cdn.kreato/videos/cap_2045_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Tipografía cinética",
+            "url": "https://cdn.kreato/recursos/cap_2045.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2046",
+        "orden": 4,
+        "titulo": "Composición por capas",
+        "video_url": "https://cdn.kreato/videos/cap_2046_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Composición por capas",
+            "url": "https://cdn.kreato/recursos/cap_2046.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2047",
+        "orden": 5,
+        "titulo": "Render final",
+        "video_url": "https://cdn.kreato/videos/cap_2047_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Render final",
+            "url": "https://cdn.kreato/recursos/cap_2047.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2048",
+        "orden": 6,
+        "titulo": "Expresiones y automatización",
+        "video_url": "https://cdn.kreato/videos/cap_2048_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Expresiones y automatización",
+            "url": "https://cdn.kreato/recursos/cap_2048.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_209",
+    "nombre": "Fotografía Creativa",
+    "descripcion": "Exposición, composición, iluminación y revelado para fotografía de autor.",
+    "vector_contenido": [],
+    "precio": 79.99,
+    "categorias": [
+      "Fotografía"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.6,
+    "total_resenas": 221,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2049",
+        "orden": 1,
+        "titulo": "Exposición",
+        "video_url": "https://cdn.kreato/videos/cap_2049_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Exposición",
+            "url": "https://cdn.kreato/recursos/cap_2049.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2050",
+        "orden": 2,
+        "titulo": "Composición fotográfica",
+        "video_url": "https://cdn.kreato/videos/cap_2050_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Composición fotográfica",
+            "url": "https://cdn.kreato/recursos/cap_2050.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2051",
+        "orden": 3,
+        "titulo": "Iluminación de estudio",
+        "video_url": "https://cdn.kreato/videos/cap_2051_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Iluminación de estudio",
+            "url": "https://cdn.kreato/recursos/cap_2051.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2052",
+        "orden": 4,
+        "titulo": "Retrato",
+        "video_url": "https://cdn.kreato/videos/cap_2052_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Retrato",
+            "url": "https://cdn.kreato/recursos/cap_2052.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2053",
+        "orden": 5,
+        "titulo": "Edición RAW",
+        "video_url": "https://cdn.kreato/videos/cap_2053_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Edición RAW",
+            "url": "https://cdn.kreato/recursos/cap_2053.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2054",
+        "orden": 6,
+        "titulo": "Fotografía de producto",
+        "video_url": "https://cdn.kreato/videos/cap_2054_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Fotografía de producto",
+            "url": "https://cdn.kreato/recursos/cap_2054.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_210",
+    "nombre": "Branding e Identidad Visual",
+    "descripcion": "Construcción de marcas memorables: identidad, logotipos, color y guías de estilo.",
+    "vector_contenido": [],
+    "precio": 104.99,
+    "categorias": [
+      "Branding"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.7,
+    "total_resenas": 256,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2055",
+        "orden": 1,
+        "titulo": "Identidad de marca",
+        "video_url": "https://cdn.kreato/videos/cap_2055_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Identidad de marca",
+            "url": "https://cdn.kreato/recursos/cap_2055.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2056",
+        "orden": 2,
+        "titulo": "Diseño de logotipos",
+        "video_url": "https://cdn.kreato/videos/cap_2056_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de logotipos",
+            "url": "https://cdn.kreato/recursos/cap_2056.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2057",
+        "orden": 3,
+        "titulo": "Tipografía de marca",
+        "video_url": "https://cdn.kreato/videos/cap_2057_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Tipografía de marca",
+            "url": "https://cdn.kreato/recursos/cap_2057.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2058",
+        "orden": 4,
+        "titulo": "Paletas de color",
+        "video_url": "https://cdn.kreato/videos/cap_2058_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Paletas de color",
+            "url": "https://cdn.kreato/recursos/cap_2058.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2059",
+        "orden": 5,
+        "titulo": "Guías de estilo",
+        "video_url": "https://cdn.kreato/videos/cap_2059_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Guías de estilo",
+            "url": "https://cdn.kreato/recursos/cap_2059.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2060",
+        "orden": 6,
+        "titulo": "Naming y voz",
+        "video_url": "https://cdn.kreato/videos/cap_2060_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Naming y voz",
+            "url": "https://cdn.kreato/recursos/cap_2060.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_211",
+    "nombre": "Tipografía Aplicada",
+    "descripcion": "Anatomía, jerarquía y maquetación tipográfica para diseño impreso y digital.",
+    "vector_contenido": [],
+    "precio": 74.99,
+    "categorias": [
+      "Tipografía"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.5,
+    "total_resenas": 143,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2061",
+        "orden": 1,
+        "titulo": "Anatomía de la letra",
+        "video_url": "https://cdn.kreato/videos/cap_2061_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Anatomía de la letra",
+            "url": "https://cdn.kreato/recursos/cap_2061.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2062",
+        "orden": 2,
+        "titulo": "Jerarquía tipográfica",
+        "video_url": "https://cdn.kreato/videos/cap_2062_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Jerarquía tipográfica",
+            "url": "https://cdn.kreato/recursos/cap_2062.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2063",
+        "orden": 3,
+        "titulo": "Kerning y tracking",
+        "video_url": "https://cdn.kreato/videos/cap_2063_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Kerning y tracking",
+            "url": "https://cdn.kreato/recursos/cap_2063.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2064",
+        "orden": 4,
+        "titulo": "Maquetación",
+        "video_url": "https://cdn.kreato/videos/cap_2064_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Maquetación",
+            "url": "https://cdn.kreato/recursos/cap_2064.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2065",
+        "orden": 5,
+        "titulo": "Tipografía web",
+        "video_url": "https://cdn.kreato/videos/cap_2065_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Tipografía web",
+            "url": "https://cdn.kreato/recursos/cap_2065.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2066",
+        "orden": 6,
+        "titulo": "Diseño de fuentes",
+        "video_url": "https://cdn.kreato/videos/cap_2066_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de fuentes",
+            "url": "https://cdn.kreato/recursos/cap_2066.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_212",
+    "nombre": "Color y Grading Cinematográfico",
+    "descripcion": "Del color teórico al grading profesional con LUTs y monitoreo calibrado.",
+    "vector_contenido": [],
+    "precio": 114.99,
+    "categorias": [
+      "Audiovisual"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.7,
+    "total_resenas": 187,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2067",
+        "orden": 1,
+        "titulo": "Teoría del color",
+        "video_url": "https://cdn.kreato/videos/cap_2067_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Teoría del color",
+            "url": "https://cdn.kreato/recursos/cap_2067.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2068",
+        "orden": 2,
+        "titulo": "Color script",
+        "video_url": "https://cdn.kreato/videos/cap_2068_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Color script",
+            "url": "https://cdn.kreato/recursos/cap_2068.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2069",
+        "orden": 3,
+        "titulo": "LUTs",
+        "video_url": "https://cdn.kreato/videos/cap_2069_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - LUTs",
+            "url": "https://cdn.kreato/recursos/cap_2069.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2070",
+        "orden": 4,
+        "titulo": "Grading cinematográfico",
+        "video_url": "https://cdn.kreato/videos/cap_2070_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Grading cinematográfico",
+            "url": "https://cdn.kreato/recursos/cap_2070.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2071",
+        "orden": 5,
+        "titulo": "Monitoreo y calibración",
+        "video_url": "https://cdn.kreato/videos/cap_2071_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Monitoreo y calibración",
+            "url": "https://cdn.kreato/recursos/cap_2071.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2072",
+        "orden": 6,
+        "titulo": "Creación de looks",
+        "video_url": "https://cdn.kreato/videos/cap_2072_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Creación de looks",
+            "url": "https://cdn.kreato/recursos/cap_2072.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_213",
+    "nombre": "Diseño de Personajes Avanzado",
+    "descripcion": "Silueta, expresión y construcción de personajes listos para producción.",
+    "vector_contenido": [],
+    "precio": 99.99,
+    "categorias": [
+      "Concept Art"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.8,
+    "total_resenas": 234,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2073",
+        "orden": 1,
+        "titulo": "Silueta y forma",
+        "video_url": "https://cdn.kreato/videos/cap_2073_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Silueta y forma",
+            "url": "https://cdn.kreato/recursos/cap_2073.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2074",
+        "orden": 2,
+        "titulo": "Expresiones faciales",
+        "video_url": "https://cdn.kreato/videos/cap_2074_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Expresiones faciales",
+            "url": "https://cdn.kreato/recursos/cap_2074.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2075",
+        "orden": 3,
+        "titulo": "Turnaround",
+        "video_url": "https://cdn.kreato/videos/cap_2075_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Turnaround",
+            "url": "https://cdn.kreato/recursos/cap_2075.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2076",
+        "orden": 4,
+        "titulo": "Paleta del personaje",
+        "video_url": "https://cdn.kreato/videos/cap_2076_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Paleta del personaje",
+            "url": "https://cdn.kreato/recursos/cap_2076.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2077",
+        "orden": 5,
+        "titulo": "Lenguaje de formas",
+        "video_url": "https://cdn.kreato/videos/cap_2077_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Lenguaje de formas",
+            "url": "https://cdn.kreato/recursos/cap_2077.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2078",
+        "orden": 6,
+        "titulo": "Construcción para producción",
+        "video_url": "https://cdn.kreato/videos/cap_2078_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Construcción para producción",
+            "url": "https://cdn.kreato/recursos/cap_2078.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_214",
+    "nombre": "Texturizado y Materiales PBR",
+    "descripcion": "Creación de materiales realistas con flujo PBR, mapas y herramientas procedurales.",
+    "vector_contenido": [],
+    "precio": 94.99,
+    "categorias": [
+      "Modelado 3D"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.6,
+    "total_resenas": 166,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2079",
+        "orden": 1,
+        "titulo": "Flujo PBR",
+        "video_url": "https://cdn.kreato/videos/cap_2079_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Flujo PBR",
+            "url": "https://cdn.kreato/recursos/cap_2079.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2080",
+        "orden": 2,
+        "titulo": "Mapas de normales",
+        "video_url": "https://cdn.kreato/videos/cap_2080_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Mapas de normales",
+            "url": "https://cdn.kreato/recursos/cap_2080.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2081",
+        "orden": 3,
+        "titulo": "Materiales procedurales",
+        "video_url": "https://cdn.kreato/videos/cap_2081_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Materiales procedurales",
+            "url": "https://cdn.kreato/recursos/cap_2081.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2082",
+        "orden": 4,
+        "titulo": "Substance y pintura 3D",
+        "video_url": "https://cdn.kreato/videos/cap_2082_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Substance y pintura 3D",
+            "url": "https://cdn.kreato/recursos/cap_2082.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2083",
+        "orden": 5,
+        "titulo": "Desgaste y detalle",
+        "video_url": "https://cdn.kreato/videos/cap_2083_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Desgaste y detalle",
+            "url": "https://cdn.kreato/recursos/cap_2083.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2084",
+        "orden": 6,
+        "titulo": "Exportación de mapas",
+        "video_url": "https://cdn.kreato/videos/cap_2084_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Exportación de mapas",
+            "url": "https://cdn.kreato/recursos/cap_2084.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_215",
+    "nombre": "3D para Videojuegos",
+    "descripcion": "Creación y optimización de assets 3D listos para motores de videojuego.",
+    "vector_contenido": [],
+    "precio": 109.99,
+    "categorias": [
+      "Modelado 3D"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.7,
+    "total_resenas": 201,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2085",
+        "orden": 1,
+        "titulo": "Game assets",
+        "video_url": "https://cdn.kreato/videos/cap_2085_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Game assets",
+            "url": "https://cdn.kreato/recursos/cap_2085.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2086",
+        "orden": 2,
+        "titulo": "Optimización de polígonos",
+        "video_url": "https://cdn.kreato/videos/cap_2086_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Optimización de polígonos",
+            "url": "https://cdn.kreato/recursos/cap_2086.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2087",
+        "orden": 3,
+        "titulo": "Horneado de normales",
+        "video_url": "https://cdn.kreato/videos/cap_2087_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Horneado de normales",
+            "url": "https://cdn.kreato/recursos/cap_2087.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2088",
+        "orden": 4,
+        "titulo": "Niveles de detalle",
+        "video_url": "https://cdn.kreato/videos/cap_2088_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Niveles de detalle",
+            "url": "https://cdn.kreato/recursos/cap_2088.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2089",
+        "orden": 5,
+        "titulo": "Colisiones",
+        "video_url": "https://cdn.kreato/videos/cap_2089_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Colisiones",
+            "url": "https://cdn.kreato/recursos/cap_2089.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2090",
+        "orden": 6,
+        "titulo": "Integración al motor",
+        "video_url": "https://cdn.kreato/videos/cap_2090_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Integración al motor",
+            "url": "https://cdn.kreato/recursos/cap_2090.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_216",
+    "nombre": "Diseño Editorial y Publicación",
+    "descripcion": "Retícula, maquetación e impresión para revistas, libros e infografías.",
+    "vector_contenido": [],
+    "precio": 84.99,
+    "categorias": [
+      "Diseño Gráfico"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.5,
+    "total_resenas": 132,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2091",
+        "orden": 1,
+        "titulo": "La retícula",
+        "video_url": "https://cdn.kreato/videos/cap_2091_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - La retícula",
+            "url": "https://cdn.kreato/recursos/cap_2091.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2092",
+        "orden": 2,
+        "titulo": "Maquetación de revista",
+        "video_url": "https://cdn.kreato/videos/cap_2092_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Maquetación de revista",
+            "url": "https://cdn.kreato/recursos/cap_2092.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2093",
+        "orden": 3,
+        "titulo": "Diseño de portadas",
+        "video_url": "https://cdn.kreato/videos/cap_2093_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de portadas",
+            "url": "https://cdn.kreato/recursos/cap_2093.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2094",
+        "orden": 4,
+        "titulo": "Composición de página",
+        "video_url": "https://cdn.kreato/videos/cap_2094_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Composición de página",
+            "url": "https://cdn.kreato/recursos/cap_2094.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2095",
+        "orden": 5,
+        "titulo": "Impresión y acabados",
+        "video_url": "https://cdn.kreato/videos/cap_2095_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Impresión y acabados",
+            "url": "https://cdn.kreato/recursos/cap_2095.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2096",
+        "orden": 6,
+        "titulo": "Diseño de infografías",
+        "video_url": "https://cdn.kreato/videos/cap_2096_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Diseño de infografías",
+            "url": "https://cdn.kreato/recursos/cap_2096.pdf"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "cur_217",
+    "nombre": "Sound Design para Audiovisuales",
+    "descripcion": "Diseño y mezcla de sonido para video, animación y videojuegos.",
+    "vector_contenido": [],
+    "precio": 99.99,
+    "categorias": [
+      "Audiovisual"
+    ],
+    "creadores": [
+      "perf_001"
+    ],
+    "rating_promedio": 4.6,
+    "total_resenas": 148,
+    "compras": [],
+    "capitulos": [
+      {
+        "_id": "cap_2097",
+        "orden": 1,
+        "titulo": "Fundamentos del sonido",
+        "video_url": "https://cdn.kreato/videos/cap_2097_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Fundamentos del sonido",
+            "url": "https://cdn.kreato/recursos/cap_2097.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2098",
+        "orden": 2,
+        "titulo": "Grabación de campo",
+        "video_url": "https://cdn.kreato/videos/cap_2098_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Grabación de campo",
+            "url": "https://cdn.kreato/recursos/cap_2098.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2099",
+        "orden": 3,
+        "titulo": "Efectos de sonido",
+        "video_url": "https://cdn.kreato/videos/cap_2099_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Efectos de sonido",
+            "url": "https://cdn.kreato/recursos/cap_2099.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2100",
+        "orden": 4,
+        "titulo": "Música y ambiente",
+        "video_url": "https://cdn.kreato/videos/cap_2100_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Música y ambiente",
+            "url": "https://cdn.kreato/recursos/cap_2100.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2101",
+        "orden": 5,
+        "titulo": "Mezcla y masterización",
+        "video_url": "https://cdn.kreato/videos/cap_2101_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Mezcla y masterización",
+            "url": "https://cdn.kreato/recursos/cap_2101.pdf"
+          }
+        ]
+      },
+      {
+        "_id": "cap_2102",
+        "orden": 6,
+        "titulo": "Audio para videojuegos",
+        "video_url": "https://cdn.kreato/videos/cap_2102_720p.mp4",
+        "recursos": [
+          {
+            "nombre": "Material de apoyo - Audio para videojuegos",
+            "url": "https://cdn.kreato/recursos/cap_2102.pdf"
+          }
+        ]
+      }
+    ]
+  }
+]
