@@ -42,11 +42,7 @@ await connectDB();
 app.use(express.json());
 
 // Servir imágenes locales del dataset en /imagenes/<carpeta>/<archivo>
-const IMG_DIR = join(
-  __dirname, '..', 'data',
-  'Imágenes_Dataset_Kreato-20260608T030400Z-3-001',
-  'Imágenes_Dataset_Kreato'
-);
+const IMG_DIR = join(__dirname, '..', 'data', 'Imagenes');
 app.use('/imagenes', express.static(IMG_DIR));
 
 // RAG y búsqueda vectorial
