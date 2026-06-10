@@ -133,18 +133,60 @@ export async function retrieveCursos(queryText, limit = 5) {
 }
 
 export async function retrieveByImage(imageUrl, limit = 5) {
-  console.log(`[ragService] retrieveByImage() — url: ${imageUrl} | limit: ${limit}`);
+  console.log(`\n[ragService] ══ retrieveByImage() ══`);
+  console.log(`[ragService]   url   : ${imageUrl}`);
+  console.log(`[ragService]   limit : ${limit}`);
 
-  const queryVector = await embedImage(imageUrl);
-  console.log(`[ragService]   $vectorSearch → índice: "rag_publicaciones_img"`);
+  // 1. Generar embedding de la imagen
+  console.log(`[ragService]   ⏳ Descargando y embeddiendo imagen...`);
+  let queryVector;
+  try {
+    queryVector = await embedImage(imageUrl);
+  } catch (e) {
+    console.error(`[ragService]   ❌ embedImage() falló: ${e.message}`);
+    throw e;
+  }
+  console.log(`[ragService]   ✅ embedImage() OK — dims: ${queryVector.length} | primeros 3: [${queryVector.slice(0,3).map(v=>v.toFixed(4)).join(', ')}]`);
 
-  const resultados = await Publicaciones.aggregate([
-    { $vectorSearch: { index: 'rag_publicaciones_img', path: 'vector_imagen', queryVector, numCandidates: limit * 10, limit } },
+  // 2. Contar publicaciones con vector_imagen válido en DB
+  const totalConVector = await Publicaciones.countDocuments({ vector_imagen: { $exists: true, $not: { $size: 0 } } });
+  console.log(`[ragService]   📊 publicaciones con vector_imagen: ${totalConVector}`);
+
+  // 3. Ejecutar $vectorSearch
+  const pipeline = [
+    {
+      $vectorSearch: {
+        index:         'rag_publicaciones_img',
+        path:          'vector_imagen',
+        queryVector,
+        numCandidates: Math.max(limit * 10, 50),
+        limit,
+      }
+    },
     { $project: { _id: 1, creativo_id: 1, imagen_url: 1, descripcion: 1, categorias: 1, score: { $meta: 'vectorSearchScore' } } }
-  ]);
+  ];
 
-  console.log(`[ragService] ✅ retrieveByImage() — ${resultados.length} resultados`);
-  resultados.forEach((r, i) => console.log(`[ragService]   [${i + 1}] id: ${r._id} | score: ${r.score?.toFixed(4)}`));
+  console.log(`[ragService]   🔍 $vectorSearch → índice: "rag_publicaciones_img" | numCandidates: ${Math.max(limit * 10, 50)}`);
+
+  let resultados;
+  try {
+    resultados = await Publicaciones.aggregate(pipeline);
+  } catch (e) {
+    console.error(`[ragService]   ❌ $vectorSearch falló: ${e.message}`);
+    throw e;
+  }
+
+  if (resultados.length === 0) {
+    console.warn(`[ragService]   ⚠️  0 resultados — posibles causas:`);
+    console.warn(`[ragService]      1. El índice "rag_publicaciones_img" no existe en Atlas UI`);
+    console.warn(`[ragService]      2. El índice tiene numDimensions distinto de 512`);
+    console.warn(`[ragService]      3. El índice aún está construyéndose (estado BUILDING)`);
+  } else {
+    console.log(`[ragService]   ✅ ${resultados.length} publicaciones similares encontradas`);
+    resultados.forEach((r, i) => console.log(`[ragService]      [${i+1}] ${r._id} | score: ${r.score?.toFixed(4)} | ${r.imagen_url?.slice(0,60)}`));
+  }
+
+  console.log(`[ragService] ══ retrieveByImage() FIN ══\n`);
   return resultados;
 }
 

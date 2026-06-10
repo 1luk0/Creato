@@ -106,13 +106,17 @@ export async function searchByImage(req, res) {
     return res.status(400).json({ error: 'El campo "image_url" es obligatorio' });
   }
 
+  console.log(`[ragController]   image_url: ${image_url}`);
+  console.log(`[ragController]   limit    : ${limit}`);
+
   try {
-    const resultados = await retrieveByImage(image_url, limit);
-    console.log(`[ragController] ✅ ${resultados.length} publicaciones similares enviadas`);
-    res.json({ image_url, resultados });
+    const resultados = await retrieveByImage(image_url, Number(limit));
+    console.log(`[ragController] ✅ Respuesta — ${resultados.length} resultados`);
+    res.json({ image_url, total: resultados.length, resultados });
   } catch (e) {
-    console.error(`[ragController] ❌ Error: ${e.message}`);
-    res.status(500).json({ error: e.message });
+    console.error(`[ragController] ❌ Error en searchByImage: ${e.message}`);
+    console.error(e.stack);
+    res.status(500).json({ error: e.message, stack: e.stack?.split('\n').slice(0,4) });
   }
 }
 
