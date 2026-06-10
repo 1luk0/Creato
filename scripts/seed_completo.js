@@ -13,7 +13,16 @@
  */
 
 import 'dotenv/config';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { MongoClient } from 'mongodb';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Datos desde archivos JSON del dataset
+const CURSOS_JSON = JSON.parse(readFileSync(join(__dirname, '..', 'data', 'cursos.json'), 'utf8'));
+const TRANS_JSON  = JSON.parse(readFileSync(join(__dirname, '..', 'data', 'transcripciones.json'), 'utf8'));
 
 const BASE  = 'http://localhost:3000';
 const IMGS  = `${BASE}/imagenes`;
@@ -51,55 +60,87 @@ const ENC_EXT  = { 15: 'jpg', 18: 'jpg' };
 const imgEnc   = n => img('oferta_encargo', `${n}.${ENC_EXT[n] ?? 'jfif'}`);
 const imgPub   = (sub, file) => img(`Publicaciones/${sub}`, file);
 
+// ── catálogos extras (nivel 5) ────────────────────────────────────────────────
+
+const USUARIOS_EXTRA = [
+  // 8 CREATIVO (usr_031..usr_038) → perfil_creativo 13→20
+  { _id: 'usr_031', nombre: 'Valentina Torres Acosta',    tipo: 'CREATIVO', telefono: '3001002001', correo: 'valentina.torres@kreato.co',  perf: 'perf_015', intereses: ['Moda', 'Textil'],            foto: fotoPerf(1) },
+  { _id: 'usr_032', nombre: 'Ricardo Prado Mejía',        tipo: 'CREATIVO', telefono: '3001002002', correo: 'ricardo.prado@kreato.co',     perf: 'perf_016', intereses: ['Video', 'Cine'],             foto: fotoPerf(2) },
+  { _id: 'usr_033', nombre: 'Ana María Soto Cruz',        tipo: 'CREATIVO', telefono: '3001002003', correo: 'anamaria.soto@kreato.co',    perf: 'perf_017', intereses: ['Ilustración', 'Concept Art'], foto: fotoPerf(3) },
+  { _id: 'usr_034', nombre: 'Julián Castro Rivera',       tipo: 'CREATIVO', telefono: '3001002004', correo: 'julian.castro@kreato.co',    perf: 'perf_018', intereses: ['Diseño Industrial', '3D'],    foto: fotoPerf(5) },
+  { _id: 'usr_035', nombre: 'Camila Vega Parra',          tipo: 'CREATIVO', telefono: '3001002005', correo: 'camila.vega@kreato.co',      perf: 'perf_019', intereses: ['Fotografía', 'Naturaleza'],   foto: fotoPerf(6) },
+  { _id: 'usr_036', nombre: 'Hernán López Duque',         tipo: 'CREATIVO', telefono: '3001002006', correo: 'hernan.lopez@kreato.co',     perf: 'perf_020', intereses: ['Tipografía', 'Editorial'],    foto: fotoPerf(7) },
+  { _id: 'usr_037', nombre: 'María Fernanda Ruiz Gómez',  tipo: 'CREATIVO', telefono: '3001002007', correo: 'mafe.ruiz@kreato.co',        perf: 'perf_021', intereses: ['Web Design', 'Frontend'],     foto: fotoPerf(8) },
+  { _id: 'usr_038', nombre: 'Alejandro Mora Castillo',    tipo: 'CREATIVO', telefono: '3001002008', correo: 'alejandro.mora@kreato.co',   perf: 'perf_022', intereses: ['Arte Digital', 'Ilustración'],foto: fotoPerf(9) },
+  // 12 EMPRESA (usr_039..usr_050) → perfil_empresa 9→20
+  { _id: 'usr_039', nombre: 'Diseños Quito SAS',          tipo: 'EMPRESA', telefono: '6041003001', correo: 'hola@disenosquito.co',       perf: 'perf_emp_009', nit: '900.111.222-1', sector: 'Diseño Gráfico',        logo: fotoEmp(1) },
+  { _id: 'usr_040', nombre: 'Imagina Estudio SAS',        tipo: 'EMPRESA', telefono: '6041003002', correo: 'info@imaginaestudio.co',     perf: 'perf_emp_010', nit: '901.333.444-5', sector: 'Agencia Creativa',      logo: fotoEmp(2) },
+  { _id: 'usr_041', nombre: 'Colors & Type SAS',          tipo: 'EMPRESA', telefono: '6041003003', correo: 'hola@colorstype.co',         perf: 'perf_emp_011', nit: '900.555.666-7', sector: 'Branding',              logo: fotoEmp(3) },
+  { _id: 'usr_042', nombre: 'Creativa Norte SAS',         tipo: 'EMPRESA', telefono: '6041003004', correo: 'contacto@creativanorte.co',  perf: 'perf_emp_012', nit: '800.777.888-3', sector: 'Identidad Visual',      logo: fotoEmp(1) },
+  { _id: 'usr_043', nombre: 'Nexo Visual SAS',            tipo: 'EMPRESA', telefono: '6041003005', correo: 'info@nexovisual.co',         perf: 'perf_emp_013', nit: '901.999.000-9', sector: 'Motion y Video',        logo: fotoEmp(2) },
+  { _id: 'usr_044', nombre: 'Marca Viva SAS',             tipo: 'EMPRESA', telefono: '6041003006', correo: 'hola@marcaviva.co',          perf: 'perf_emp_014', nit: '900.123.987-4', sector: 'Branding Estratégico',  logo: fotoEmp(3) },
+  { _id: 'usr_045', nombre: 'Estudio Forma SAS',          tipo: 'EMPRESA', telefono: '6041003007', correo: 'contacto@estudioforma.co',   perf: 'perf_emp_015', nit: '800.456.321-6', sector: 'Diseño Editorial',      logo: fotoEmp(1) },
+  { _id: 'usr_046', nombre: 'Loop Digital SAS',           tipo: 'EMPRESA', telefono: '6041003008', correo: 'info@loopdigital.co',        perf: 'perf_emp_016', nit: '901.654.321-2', sector: 'Animación Digital',     logo: fotoEmp(2) },
+  { _id: 'usr_047', nombre: 'Canvas Studio SAS',          tipo: 'EMPRESA', telefono: '6041003009', correo: 'hola@canvasstudio.co',       perf: 'perf_emp_017', nit: '900.234.567-8', sector: 'Arte y Cultura',        logo: fotoEmp(3) },
+  { _id: 'usr_048', nombre: 'Pixel Studio Colombia',      tipo: 'EMPRESA', telefono: '6041003010', correo: 'contacto@pixelstudio.co',    perf: 'perf_emp_018', nit: '800.876.543-1', sector: 'UX/UI Design',          logo: fotoEmp(1) },
+  { _id: 'usr_049', nombre: 'Artes Visuales Andinas SAS', tipo: 'EMPRESA', telefono: '6041003011', correo: 'info@artesandinas.co',       perf: 'perf_emp_019', nit: '901.111.999-5', sector: 'Fotografía y Video',    logo: fotoEmp(2) },
+  { _id: 'usr_050', nombre: 'Grafik Lab SAS',             tipo: 'EMPRESA', telefono: '6041003012', correo: 'hola@grafiklab.co',          perf: 'perf_emp_020', nit: '900.888.777-3', sector: 'Diseño Gráfico',        logo: fotoEmp(3) },
+];
+
+const PERFILES_CREATIVOS_EXTRA2 = [
+  { userId: 'usr_031', _id: 'perf_015', profesiones: ['Diseñadora de Moda', 'Estilista'],        habilidades: ['Illustrator', 'Photoshop', 'Clo3D'],              descripcion: 'Diseñadora de moda especializada en indumentaria sostenible y fotografía de lookbook para marcas emergentes colombianas.' },
+  { userId: 'usr_032', _id: 'perf_016', profesiones: ['Videógrafo', 'Cineasta'],                  habilidades: ['Premiere Pro', 'DaVinci Resolve', 'After Effects'], descripcion: 'Videógrafo documental y de marca con experiencia en narrativas visuales para campañas digitales y festivales de cine.' },
+  { userId: 'usr_033', _id: 'perf_017', profesiones: ['Ilustradora', 'Concept Artist'],           habilidades: ['Procreate', 'Photoshop', 'Clip Studio Paint'],     descripcion: 'Artista conceptual e ilustradora con enfoque en worldbuilding, character design y libros álbum para el mercado editorial latinoamericano.' },
+  { userId: 'usr_034', _id: 'perf_018', profesiones: ['Diseñador Industrial', 'Modelador 3D'],    habilidades: ['SolidWorks', 'Blender', 'Rhinoceros'],             descripcion: 'Diseñador industrial y modelador 3D orientado al prototipado de productos, packaging funcional y mobiliario contemporáneo.' },
+  { userId: 'usr_035', _id: 'perf_019', profesiones: ['Fotógrafa', 'Retocadora Digital'],         habilidades: ['Lightroom', 'Photoshop', 'Capture One'],           descripcion: 'Fotógrafa especializada en naturaleza, paisajes colombianos y fotografía de viaje para revistas de turismo y marcas outdoor.' },
+  { userId: 'usr_036', _id: 'perf_020', profesiones: ['Tipógrafo', 'Diseñador Editorial'],        habilidades: ['InDesign', 'Glyphs', 'Illustrator'],               descripcion: 'Diseñador editorial y tipógrafo con proyectos de diseño de fuentes, publicaciones de lujo y sistemas de señalética corporativa.' },
+  { userId: 'usr_037', _id: 'perf_021', profesiones: ['Diseñadora Web', 'Frontend Designer'],     habilidades: ['Figma', 'Webflow', 'CSS/HTML'],                    descripcion: 'Diseñadora web y frontend con dominio en sistemas de diseño, responsive UI y landing pages de alta conversión para startups.' },
+  { userId: 'usr_038', _id: 'perf_022', profesiones: ['Artista Digital', 'Ilustrador'],           habilidades: ['Procreate', 'Photoshop', 'Blender'],               descripcion: 'Artista digital especializado en ilustración generativa, arte de colecciones y experiencias visuales interactivas para plataformas digitales.' },
+];
+
 // ── catálogos ─────────────────────────────────────────────────────────────────
 
 const USUARIOS_NUEVOS = [
-  // 5 CREATIVO
-  { _id: 'usr_006', nombre: 'Sofía Ramírez Calle',    tipo: 'CREATIVO', telefono: '3001001001', correo: 'sofia.ramirez@kreato.co',   perf: 'perf_006', intereses: ['Ilustración', 'Branding'],          foto: fotoPerf(1) },
-  { _id: 'usr_007', nombre: 'Daniel Herrera Ossa',    tipo: 'CREATIVO', telefono: '3001001002', correo: 'daniel.herrera@kreato.co',  perf: 'perf_007', intereses: ['Motion Graphics', 'Tipografía'],    foto: fotoPerf(2) },
-  { _id: 'usr_008', nombre: 'Mariana Zuluaga Ríos',   tipo: 'CREATIVO', telefono: '3001001003', correo: 'mariana.zuluaga@kreato.co', perf: 'perf_008', intereses: ['Fotografía', 'Editorial'],          foto: fotoPerf(3) },
-  { _id: 'usr_009', nombre: 'Sebastián Montoya Gil',  tipo: 'CREATIVO', telefono: '3001001004', correo: 'sebastian.m@kreato.co',     perf: 'perf_009', intereses: ['UX Design', 'Prototipos'],          foto: fotoPerf(5) },
-  { _id: 'usr_010', nombre: 'Valeria Castro Pérez',   tipo: 'CREATIVO', telefono: '3001001005', correo: 'valeria.castro@kreato.co',  perf: 'perf_010', intereses: ['Lettering', '3D'],                 foto: fotoPerf(6) },
-  // 4 EMPRESA
-  { _id: 'usr_011', nombre: 'Agencia Croma SAS',        tipo: 'EMPRESA', telefono: '6041002001', correo: 'hola@croma.co',             perf: 'perf_emp_002', nit: '900.123.456-7', sector: 'Agencia Creativa',       logo: fotoEmp(1) },
-  { _id: 'usr_012', nombre: 'Pixel & Color Ltda',       tipo: 'EMPRESA', telefono: '6041002002', correo: 'contacto@pixelcolor.co',    perf: 'perf_emp_003', nit: '800.987.654-3', sector: 'Diseño Digital',         logo: fotoEmp(2) },
-  { _id: 'usr_013', nombre: 'Studio Norte Digital SAS', tipo: 'EMPRESA', telefono: '6041002003', correo: 'info@studionorte.co',       perf: 'perf_emp_004', nit: '901.222.333-1', sector: 'Branding',              logo: fotoEmp(3) },
-  { _id: 'usr_014', nombre: 'Forma Visual SAS',         tipo: 'EMPRESA', telefono: '6041002004', correo: 'design@formavs.co',         perf: 'perf_emp_005', nit: '900.777.888-9', sector: 'Identidad Corporativa', logo: fotoEmp(1) },
-  // 5 CLIENTE
-  { _id: 'usr_015', nombre: 'Andrés Ospina Vélez',    tipo: 'CLIENTE', telefono: '3109003001', correo: 'andres.ospina@gmail.com',  intereses: ['Branding'] },
-  { _id: 'usr_016', nombre: 'Camila Reyes Mora',      tipo: 'CLIENTE', telefono: '3109003002', correo: 'camila.reyes@gmail.com',   intereses: ['Fotografía'] },
-  { _id: 'usr_017', nombre: 'Juan Pablo Torres',      tipo: 'CLIENTE', telefono: '3109003003', correo: 'jp.torres@empresa.co',     intereses: ['Marketing Digital'] },
-  { _id: 'usr_018', nombre: 'Isabella Gómez Arias',   tipo: 'CLIENTE', telefono: '3109003004', correo: 'isa.gomez@outlook.com',    intereses: ['UX Design'] },
-  { _id: 'usr_019', nombre: 'Felipe Morales Rúa',     tipo: 'CLIENTE', telefono: '3109003005', correo: 'felipe.morales@creativo.co', intereses: ['Ilustración'] },
+  // 9 CREATIVO (usr_006..usr_014)
+  { _id: 'usr_006', nombre: 'Sofía Ramírez Calle',      tipo: 'CREATIVO', telefono: '3001001001', correo: 'sofia.ramirez@kreato.co',    perf: 'perf_006', intereses: ['Ilustración', 'Branding'],          foto: fotoPerf(1)  },
+  { _id: 'usr_007', nombre: 'Daniel Herrera Ossa',      tipo: 'CREATIVO', telefono: '3001001002', correo: 'daniel.herrera@kreato.co',   perf: 'perf_007', intereses: ['Motion Graphics', 'Tipografía'],    foto: fotoPerf(2)  },
+  { _id: 'usr_008', nombre: 'Mariana Zuluaga Ríos',     tipo: 'CREATIVO', telefono: '3001001003', correo: 'mariana.zuluaga@kreato.co',  perf: 'perf_008', intereses: ['Fotografía', 'Editorial'],          foto: fotoPerf(3)  },
+  { _id: 'usr_009', nombre: 'Sebastián Montoya Gil',    tipo: 'CREATIVO', telefono: '3001001004', correo: 'sebastian.m@kreato.co',      perf: 'perf_009', intereses: ['UX Design', 'Prototipos'],          foto: fotoPerf(5)  },
+  { _id: 'usr_010', nombre: 'Valeria Castro Pérez',     tipo: 'CREATIVO', telefono: '3001001005', correo: 'valeria.castro@kreato.co',   perf: 'perf_010', intereses: ['Lettering', '3D'],                  foto: fotoPerf(6)  },
+  { _id: 'usr_011', nombre: 'Carlos Mejía Ramos',       tipo: 'CREATIVO', telefono: '3001001006', correo: 'carlos.mejia@kreato.co',     perf: 'perf_011', intereses: ['Modelado 3D', 'Animación'],         foto: fotoPerf(7)  },
+  { _id: 'usr_012', nombre: 'Luciana Vargas Pinto',     tipo: 'CREATIVO', telefono: '3001001007', correo: 'luciana.vargas@kreato.co',   perf: 'perf_012', intereses: ['Dirección de Arte', 'Editorial'],   foto: fotoPerf(8)  },
+  { _id: 'usr_013', nombre: 'Mateo Jiménez Cano',       tipo: 'CREATIVO', telefono: '3001001008', correo: 'mateo.jimenez@kreato.co',    perf: 'perf_013', intereses: ['Fotografía', 'Video'],              foto: fotoPerf(9)  },
+  { _id: 'usr_014', nombre: 'Natalia Pérez Giraldo',    tipo: 'CREATIVO', telefono: '3001001009', correo: 'natalia.perez@kreato.co',    perf: 'perf_014', intereses: ['UX Design', 'Branding'],            foto: fotoPerf(10) },
+  // 7 EMPRESA (usr_015..usr_021)
+  { _id: 'usr_015', nombre: 'Agencia Croma SAS',         tipo: 'EMPRESA', telefono: '6041002001', correo: 'hola@croma.co',              perf: 'perf_emp_002', nit: '900.123.456-7', sector: 'Agencia Creativa',       logo: fotoEmp(1) },
+  { _id: 'usr_016', nombre: 'Pixel & Color Ltda',         tipo: 'EMPRESA', telefono: '6041002002', correo: 'contacto@pixelcolor.co',     perf: 'perf_emp_003', nit: '800.987.654-3', sector: 'Diseño Digital',         logo: fotoEmp(2) },
+  { _id: 'usr_017', nombre: 'Studio Norte Digital SAS',   tipo: 'EMPRESA', telefono: '6041002003', correo: 'info@studionorte.co',        perf: 'perf_emp_004', nit: '901.222.333-1', sector: 'Branding',              logo: fotoEmp(3) },
+  { _id: 'usr_018', nombre: 'Forma Visual SAS',           tipo: 'EMPRESA', telefono: '6041002004', correo: 'design@formavs.co',          perf: 'perf_emp_005', nit: '900.777.888-9', sector: 'Identidad Corporativa', logo: fotoEmp(1) },
+  { _id: 'usr_019', nombre: 'Creativa Lab SAS',           tipo: 'EMPRESA', telefono: '6041002005', correo: 'hola@creativalab.co',        perf: 'perf_emp_006', nit: '901.444.555-2', sector: 'Diseño Gráfico',        logo: fotoEmp(2) },
+  { _id: 'usr_020', nombre: 'Visual Flow Estudio',        tipo: 'EMPRESA', telefono: '6041002006', correo: 'info@visualflow.co',         perf: 'perf_emp_007', nit: '900.666.777-4', sector: 'Motion y Video',        logo: fotoEmp(3) },
+  { _id: 'usr_021', nombre: 'Brandeo Colombia SAS',       tipo: 'EMPRESA', telefono: '6041002007', correo: 'contacto@brandeo.co',        perf: 'perf_emp_008', nit: '800.321.654-6', sector: 'Branding Estratégico',  logo: fotoEmp(1) },
+  // 9 CLIENTE (usr_022..usr_030)
+  { _id: 'usr_022', nombre: 'Andrés Ospina Vélez',      tipo: 'CLIENTE', telefono: '3109003001', correo: 'andres.ospina@gmail.com',   intereses: ['Branding'] },
+  { _id: 'usr_023', nombre: 'Camila Reyes Mora',        tipo: 'CLIENTE', telefono: '3109003002', correo: 'camila.reyes@gmail.com',    intereses: ['Fotografía'] },
+  { _id: 'usr_024', nombre: 'Juan Pablo Torres',        tipo: 'CLIENTE', telefono: '3109003003', correo: 'jp.torres@empresa.co',      intereses: ['Marketing Digital'] },
+  { _id: 'usr_025', nombre: 'Isabella Gómez Arias',     tipo: 'CLIENTE', telefono: '3109003004', correo: 'isa.gomez@outlook.com',     intereses: ['UX Design'] },
+  { _id: 'usr_026', nombre: 'Felipe Morales Rúa',       tipo: 'CLIENTE', telefono: '3109003005', correo: 'felipe.morales@kreato.co',  intereses: ['Ilustración'] },
+  { _id: 'usr_027', nombre: 'Gabriela Torres Ruiz',     tipo: 'CLIENTE', telefono: '3109003006', correo: 'gabriela.torres@gmail.com', intereses: ['Fotografía', 'Editorial'] },
+  { _id: 'usr_028', nombre: 'Simón Castro Mora',        tipo: 'CLIENTE', telefono: '3109003007', correo: 'simon.castro@gmail.com',    intereses: ['Animación', 'Video'] },
+  { _id: 'usr_029', nombre: 'Paula Ríos Uribe',         tipo: 'CLIENTE', telefono: '3109003008', correo: 'paula.rios@empresa.co',     intereses: ['Branding', 'Packaging'] },
+  { _id: 'usr_030', nombre: 'Esteban López Arango',     tipo: 'CLIENTE', telefono: '3109003009', correo: 'esteban.lopez@gmail.com',   intereses: ['Motion Graphics', '3D'] },
 ];
 
 const PERFILES_CREATIVOS_EXTRA = [
-  // Para los usuarios CREATIVO nuevos
-  { userId: 'usr_006', _id: 'perf_006', profesiones: ['Ilustradora', 'Diseñadora Gráfica'],    habilidades: ['Procreate', 'Illustrator', 'Photoshop'],   descripcion: 'Ilustradora con especialización en branding visual y diseño editorial para marcas emergentes colombianas.' },
-  { userId: 'usr_007', _id: 'perf_007', profesiones: ['Motion Designer', 'Animador 2D'],      habilidades: ['After Effects', 'Cinema 4D', 'Premiere'],  descripcion: 'Creador de animaciones y motion graphics para publicidad digital y contenido de marca.' },
-  { userId: 'usr_008', _id: 'perf_008', profesiones: ['Fotógrafa', 'Directora de Arte'],      habilidades: ['Lightroom', 'Capture One', 'Photoshop'],   descripcion: 'Fotógrafa editorial especializada en retratos de marca personal y fotografía de moda colombiana.' },
-  { userId: 'usr_009', _id: 'perf_009', profesiones: ['Diseñador UX', 'Prototipador'],        habilidades: ['Figma', 'Sketch', 'Principle'],            descripcion: 'Diseñador UX/UI enfocado en apps móviles y experiencias digitales centradas en el usuario.' },
-  { userId: 'usr_010', _id: 'perf_010', profesiones: ['Artista de Lettering', 'Modelador 3D'], habilidades: ['Procreate', 'Blender', 'Illustrator'],    descripcion: 'Artista creativa especializada en lettering manual, caligrafía digital y modelado 3D para branding.' },
-];
-
-const CURSOS_NUEVOS = [
-  { nombre: 'Branding Visual: Identidad de Marca',   descripcion: 'Construye identidades de marca memorables con estrategia, color y tipografía.',   categorias: ['Branding'],               precio: 79.99 },
-  { nombre: 'Tipografía Expresiva para Diseño',      descripcion: 'Domina la elección y combinación de fuentes para proyectos creativos impactantes.', categorias: ['Tipografía'],             precio: 49.99 },
-  { nombre: 'Ilustración Vectorial Profesional',     descripcion: 'Técnicas avanzadas de ilustración en Illustrator para proyectos editoriales.',      categorias: ['Ilustración'],            precio: 69.99 },
-  { nombre: 'Motion Graphics con After Effects',     descripcion: 'Crea animaciones impactantes para publicidad y contenido de marca digital.',         categorias: ['Motion Graphics'],        precio: 89.99 },
-  { nombre: 'UX Design para Aplicaciones Móviles',  descripcion: 'Diseña experiencias de usuario intuitivas para apps iOS y Android.',                  categorias: ['UX Design'],              precio: 95.00 },
-  { nombre: 'Fotografía de Retrato Profesional',    descripcion: 'Domina iluminación, composición y edición para fotografía artística.',               categorias: ['Fotografía'],             precio: 65.00 },
-  { nombre: 'Diseño Web Responsive con Figma',      descripcion: 'Crea prototipos de alta fidelidad y diseños web adaptativos modernos.',              categorias: ['Web Design'],             precio: 75.00 },
-  { nombre: 'Color Theory para Diseñadores',        descripcion: 'Teoría y práctica del color aplicada a proyectos de branding y comunicación.',        categorias: ['Color', 'Diseño'],        precio: 45.00 },
-  { nombre: 'Fotografía de Producto para E-commerce', descripcion: 'Captura imágenes profesionales de productos con equipo accesible.',               categorias: ['Fotografía'],             precio: 55.00 },
-  { nombre: 'Animación 2D con Procreate',          descripcion: 'Crea animaciones expresivas directamente en tu iPad con Procreate.',                  categorias: ['Animación', 'Ilustración'], precio: 59.99 },
-  { nombre: 'Diseño de Empaques Creativos',        descripcion: 'Aprende a diseñar packaging que destaca en el punto de venta y comunica la marca.',   categorias: ['Packaging'],              precio: 85.00 },
-  { nombre: 'Retoque Fotográfico Avanzado',        descripcion: 'Técnicas avanzadas en Photoshop para fotografía de moda y publicidad.',               categorias: ['Fotografía'],             precio: 72.00 },
-  { nombre: 'Gestión de Proyectos Creativos',      descripcion: 'Planifica y gestiona proyectos de diseño con metodologías ágiles aplicadas.',         categorias: ['Gestión'],                precio: 50.00 },
-  { nombre: 'Social Media Design Estratégico',     descripcion: 'Crea contenido visual coherente y con impacto para todas las plataformas sociales.',   categorias: ['Redes Sociales'],         precio: 55.00 },
-  { nombre: 'Lettering y Caligrafía Digital',      descripcion: 'Arte del lettering manual y digital aplicado a branding y proyectos creativos.',       categorias: ['Lettering'],              precio: 48.00 },
-  { nombre: 'Modelado 3D con Blender para Diseño', descripcion: 'Introducción al modelado 3D con Blender aplicado a diseño gráfico y branding.',      categorias: ['3D', 'Modelado'],         precio: 99.99 },
-  { nombre: 'Dirección de Arte para Publicidad',   descripcion: 'Conceptualización y dirección visual de campañas publicitarias creativas.',            categorias: ['Dirección de Arte'],      precio: 110.00 },
+  { userId: 'usr_006', _id: 'perf_006', profesiones: ['Ilustradora', 'Diseñadora Gráfica'],     habilidades: ['Procreate', 'Illustrator', 'Photoshop'],        descripcion: 'Ilustradora con especialización en branding visual y diseño editorial para marcas emergentes colombianas.' },
+  { userId: 'usr_007', _id: 'perf_007', profesiones: ['Motion Designer', 'Animador 2D'],        habilidades: ['After Effects', 'Cinema 4D', 'Premiere'],       descripcion: 'Creador de animaciones y motion graphics para publicidad digital y contenido de marca.' },
+  { userId: 'usr_008', _id: 'perf_008', profesiones: ['Fotógrafa', 'Directora de Arte'],        habilidades: ['Lightroom', 'Capture One', 'Photoshop'],        descripcion: 'Fotógrafa editorial especializada en retratos de marca personal y fotografía de moda colombiana.' },
+  { userId: 'usr_009', _id: 'perf_009', profesiones: ['Diseñador UX', 'Prototipador'],          habilidades: ['Figma', 'Sketch', 'Principle'],                 descripcion: 'Diseñador UX/UI enfocado en apps móviles y experiencias digitales centradas en el usuario.' },
+  { userId: 'usr_010', _id: 'perf_010', profesiones: ['Artista de Lettering', 'Modelador 3D'],  habilidades: ['Procreate', 'Blender', 'Illustrator'],          descripcion: 'Artista creativa especializada en lettering manual, caligrafía digital y modelado 3D para branding.' },
+  { userId: 'usr_011', _id: 'perf_011', profesiones: ['Animador 3D', 'Modelador'],              habilidades: ['Blender', 'Cinema 4D', 'Substance Painter'],    descripcion: 'Animador 3D especializado en visualizaciones de producto, branded content y animación para publicidad.' },
+  { userId: 'usr_012', _id: 'perf_012', profesiones: ['Directora de Arte', 'Diseñadora Editorial'], habilidades: ['InDesign', 'Illustrator', 'Photoshop'],     descripcion: 'Directora de arte con enfoque en editoriales de moda, conceptualización visual y dirección de sesiones fotográficas.' },
+  { userId: 'usr_013', _id: 'perf_013', profesiones: ['Fotógrafo', 'Videógrafo'],               habilidades: ['Premiere', 'DaVinci Resolve', 'Lightroom'],     descripcion: 'Fotógrafo y videógrafo documental especializado en contenido para marcas, eventos y narrativas visuales.' },
+  { userId: 'usr_014', _id: 'perf_014', profesiones: ['Diseñadora UX', 'Brand Designer'],       habilidades: ['Figma', 'Webflow', 'Illustrator'],              descripcion: 'Diseñadora UX y brand designer enfocada en identidad digital, sistemas de diseño y experiencias de usuario.' },
 ];
 
 const CARGOS_LABORAL = [
@@ -143,7 +184,8 @@ const TEMATICAS_ASESORIA = [
 ];
 
 const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-const CLIENTES = ['usr_002', 'usr_005', 'usr_015', 'usr_016', 'usr_017', 'usr_018', 'usr_019'];
+// usr_002 y usr_005 son clientes del seed original; usr_022..usr_030 son los nuevos
+const CLIENTES = ['usr_002', 'usr_005', 'usr_022', 'usr_023', 'usr_024', 'usr_025', 'usr_026', 'usr_027', 'usr_028', 'usr_029', 'usr_030'];
 
 // ── FASE 0: Limpieza directa en MongoDB ───────────────────────────────────────
 
@@ -203,12 +245,30 @@ async function limpiezaDB() {
     });
     console.log(`  asesorías ase_1..25 eliminadas: ${delAse.deletedCount}`);
 
+    // Transcripciones hardcodeadas antiguas (usaban source_ids incorrectos)
+    const delTrans = await db.collection('transcripciones').deleteMany({
+      _id: { $in: ['trans_001', 'trans_002', 'trans_003', 'trans_004', 'trans_005'] }
+    });
+    console.log(`  transcripciones antiguas eliminadas: ${delTrans.deletedCount}`);
+
+    // Cursos con IDs cur_1XX (del seed original que no tienen capítulos con IDs explícitos)
+    const delCurOld = await db.collection('cursos').deleteMany({ _id: /^cur_1\d+$/ });
+    console.log(`  cursos cur_1XX eliminados: ${delCurOld.deletedCount}`);
+
     // Resetear contadores afectados
     await db.collection('contador').updateMany(
       { _id: { $in: ['usuarios', 'perfil_creativo', 'perfil_empresa', 'oferta_laboral', 'oferta_asesoria', 'solicitudes', 'pagos', 'asesoria'] } },
       { $set: { secuencia: 0 } }
     );
     console.log('  contadores reseteados a 0');
+
+    // Desactivar validador Atlas para oferta_encargo (Int32 vs Double en rango_pago)
+    try {
+      await db.command({ collMod: 'oferta_encargo', validationLevel: 'off' });
+      console.log('  validador oferta_encargo desactivado (Int32/Double fix)');
+    } catch (e) {
+      console.log(`  ⚠️  collMod oferta_encargo: ${e.message}`);
+    }
   });
 }
 
@@ -225,6 +285,7 @@ async function crearUsuarios() {
       _id: u._id,
       nombre: u.nombre,
       correo: u.correo,
+      telefono: u.telefono,
       password: 'Kreato2026*',
       tipo_usuario: u.tipo,
       intereses: u.intereses ?? [],
@@ -289,119 +350,104 @@ async function completarPerfilesCreativos() {
 async function actualizarLogosEmpresa() {
   console.log('\n🏢 FASE 1c: Logos para PerfilEmpresa');
 
-  const empresas = USUARIOS_NUEVOS.filter(u => u.tipo === 'EMPRESA');
-  const logos = [fotoEmp(1), fotoEmp(2), fotoEmp(3), fotoEmp(1)]; // 4 empresas
+  const empresas  = USUARIOS_NUEVOS.filter(u => u.tipo === 'EMPRESA');
+  // Logos disponibles en la carpeta: 1.jfif, 2.jfif, 3.png — se rotan
+  const LOGOS_DSP = [fotoEmp(1), fotoEmp(2), fotoEmp(3)];
 
   for (let i = 0; i < empresas.length; i++) {
     const u    = empresas[i];
-    const logo = logos[i];
-    const perfil = await directDB(async db =>
-      db.collection('perfil_empresa').findOne({ user_id: u._id })
-    );
-    if (!perfil) { console.log(`  ⚠️  Sin perfil empresa para ${u._id}`); continue; }
+    const logo = LOGOS_DSP[i % LOGOS_DSP.length];
+
+    // Buscar el perfil empresa via API usando el _id_perfil que definimos
+    const perfil = await api('GET', `/api/perfil-empresa/${u.perf}`);
+    if (!perfil) { console.log(`  ⚠️  Sin perfil empresa para ${u._id} (${u.perf})`); continue; }
 
     const upd = await api('PUT', `/api/perfil-empresa/${perfil._id}`, { logo });
-    if (upd) console.log(`  ✅ ${perfil._id} logo → ${logo}`);
+    if (upd) console.log(`  ✅ ${perfil._id} (${u._id}) logo → ${logo}`);
   }
 }
 
-// ── FASE 2: Transcripciones ───────────────────────────────────────────────────
+// ── FASE 2: Transcripciones (vía HTTP — controller auto-ejecuta pipeline RAG) ─
 
 async function crearTranscripciones() {
-  console.log('\n📝 FASE 2: Transcripciones');
+  console.log(`\n📝 FASE 2: Transcripciones vía HTTP (${TRANS_JSON.length} registros)`);
+  console.log('     ⏳ Pipeline síncrono: cada transcripción espera sus 3 estrategias antes de continuar...');
 
-  const transcripciones = [
-    {
-      _id: 'trans_001', source_id: 'ase_444',
-      texto_completo: 'En esta sesión revisamos los fundamentos del branding: el logo no es la marca, es el punto de partida. Una identidad sólida nace de valores claros y un público bien definido.',
-      lineas: [
-        { minuto: '00:00', texto: 'Bienvenida y presentación de la sesión de branding visual.' },
-        { minuto: '02:30', texto: 'El logo no es la marca completa. Es la punta del iceberg de una identidad.' },
-        { minuto: '05:00', texto: 'Los tres pilares de una identidad de marca: valores, voz y visual.' },
-        { minuto: '08:20', texto: 'Ejercicio práctico: definir los atributos de tu marca en tres palabras.' },
-        { minuto: '12:00', texto: 'Revisión del portafolio y retroalimentación sobre uso del color.' },
-      ]
-    },
-    {
-      _id: 'trans_002', source_id: 'cur_101',
-      texto_completo: 'Módulo sobre teoría del color en diseño digital. La luz ambiente, las sombras proyectadas y el balance de temperatura cromática son claves para lograr realismo en ilustraciones digitales.',
-      lineas: [
-        { minuto: '00:00', texto: 'Introducción a la teoría del color en entornos digitales.' },
-        { minuto: '03:15', texto: 'Temperatura de color: cálidos versus fríos en composición.' },
-        { minuto: '06:00', texto: 'La rueda de color y sus aplicaciones prácticas en Procreate.' },
-        { minuto: '10:45', texto: 'Ejercicio: crear una paleta monocromática con variaciones de luminosidad.' },
-      ]
-    },
-    {
-      _id: 'trans_003', source_id: 'cur_101',
-      texto_completo: 'Segunda sesión del módulo de luz y sombra. Exploramos técnicas de iluminación dramática para dar volumen y profundidad a personajes digitales.',
-      lineas: [
-        { minuto: '00:00', texto: 'Repaso de la sesión anterior sobre temperatura de color.' },
-        { minuto: '04:00', texto: 'Luz ambiente versus luz puntual: diferencias y usos.' },
-        { minuto: '07:30', texto: 'Técnica de capas para sombras suaves en Procreate.' },
-        { minuto: '11:00', texto: 'Ejercicio de iluminación dramática con referencia fotográfica.' },
-        { minuto: '15:20', texto: 'Errores comunes en iluminación digital y cómo evitarlos.' },
-      ]
-    },
-    {
-      _id: 'trans_004', source_id: 'ase_444',
-      texto_completo: 'Sesión de revisión de portafolio. Analizamos la coherencia visual entre piezas, la presentación para clientes y la estrategia de difusión en redes sociales profesionales.',
-      lineas: [
-        { minuto: '00:00', texto: 'Revisión inicial del portafolio en Behance.' },
-        { minuto: '03:00', texto: 'La importancia del contexto y descripción de cada proyecto.' },
-        { minuto: '06:30', texto: 'Consejos para mejorar la presentación visual de tus piezas.' },
-        { minuto: '10:00', texto: 'Estrategia de publicación en LinkedIn para diseñadores.' },
-      ]
-    },
-    {
-      _id: 'trans_005', source_id: 'cur_101',
-      texto_completo: 'Clase sobre tipografía en diseño editorial. Selección de fuentes, jerarquía tipográfica y ritmo visual en composiciones de revista y publicidad impresa.',
-      lineas: [
-        { minuto: '00:00', texto: 'Fundamentos de tipografía: anatomía de la letra.' },
-        { minuto: '03:30', texto: 'Jerarquía tipográfica: titular, subtítulo, cuerpo y notas al pie.' },
-        { minuto: '07:00', texto: 'Combinación de familias tipográficas: serif con sans-serif.' },
-        { minuto: '11:30', texto: 'Ejercicio de composición editorial con la regla áurea.' },
-        { minuto: '16:00', texto: 'Errores frecuentes en tipografía y cómo corregirlos.' },
-      ]
-    },
-  ];
+  let creadas = 0;
+  let procesadas = 0;
+  let omitidas = 0;
 
-  for (const t of transcripciones) {
-    const existe = await api('GET', `/api/transcripciones/${t._id}`).catch(() => null);
-    if (existe) { console.log(`  ⏭️  ${t._id} ya existe`); continue; }
-    const r = await api('POST', '/api/transcripciones', t);
-    if (r) console.log(`  ✅ ${r._id} (source: ${t.source_id})`);
+  for (const t of TRANS_JSON) {
+    const existe = await api('GET', `/api/transcripciones/${t._id}`);
+
+    if (!existe) {
+      // No existe → crear vía HTTP (el controller ejecuta el pipeline automáticamente)
+      const r = await api('POST', '/api/transcripciones', {
+        _id:            t._id,
+        source_id:      t.source_id,
+        texto_completo: t.texto_completo,
+        lineas:         t.lineas,
+      });
+      if (r) {
+        creadas++;
+        console.log(`  ✅ ${r._id} creada + pipeline ejecutado`);
+      }
+      continue;
+    }
+
+    // Ya existe → verificar si tiene chunks en vector_transcripciones
+    const chunks = await directDB(async db =>
+      db.collection('vector_transcripciones').countDocuments({ transcripcion_id: t._id })
+    );
+
+    if (chunks >= 3) {
+      // Tiene al menos 1 chunk por estrategia → ya procesada
+      omitidas++;
+      continue;
+    }
+
+    // Existe pero sin chunks (creada antes del pipeline) → procesar ahora
+    const r = await api('POST', `/api/transcripciones/${t._id}/procesar`);
+    if (r) {
+      procesadas++;
+      const totales = Object.values(r.resultados ?? {}).map(x => x.chunks_generados).join(' / ');
+      console.log(`  🔄 ${t._id} procesada | chunks: ${totales}`);
+    }
   }
+
+  console.log(`  Resumen: ${creadas} creadas | ${procesadas} procesadas | ${omitidas} completas`);
 }
 
-// ── FASE 3: Cursos ────────────────────────────────────────────────────────────
+// ── FASE 3: Cursos (vía HTTP desde data/cursos.json) ─────────────────────────
 
 async function crearCursos() {
-  console.log('\n📚 FASE 3: Cursos (objetivo ≥ 20)');
+  console.log(`\n📚 FASE 3: Cursos desde JSON vía HTTP (${CURSOS_JSON.length} cursos)`);
 
-  const cursosActuales = await api('GET', '/api/cursos');
-  const faltanCursos = Math.max(0, 20 - cursosActuales.length);
-  console.log(`  Actuales: ${cursosActuales.length} — a crear: ${faltanCursos}`);
+  // Construir mapeo perfId → userId dinámicamente desde la API
+  const perfiles = await api('GET', '/api/creativos');
+  const perfAUsr = {};
+  for (const p of (perfiles ?? [])) {
+    perfAUsr[p._id] = p.user_id;
+  }
+  console.log(`  Mapeo perfil→usuario: ${JSON.stringify(perfAUsr)}`);
 
-  // Creativos con IDs de usuarios (que el controller valida contra usuarios collection)
-  const CREATIVOS_USR = ['usr_001', 'usr_003', 'usr_004', 'usr_006', 'usr_007', 'usr_008', 'usr_009', 'usr_010'];
+  for (const curso of CURSOS_JSON) {
+    const existe = await api('GET', `/api/cursos/${curso._id}`);
+    if (existe) { console.log(`  ⏭️  ${curso._id} ya existe`); continue; }
 
-  for (let i = 0; i < faltanCursos; i++) {
-    const tema    = CURSOS_NUEVOS[i % CURSOS_NUEVOS.length];
-    const creador = CREATIVOS_USR[i % CREATIVOS_USR.length];
-    const id      = `cur_${String(104 + i).padStart(3, '0')}`;
+    // cursos.json usa IDs de perfil_creativo; el controller valida contra usuarios
+    const creadores = curso.creadores.map(id => perfAUsr[id] ?? id);
 
-    const c = await api('POST', '/api/cursos', {
-      _id: id,
-      ...tema,
-      creadores: [creador],
-      capitulos: [
-        { orden: 1, titulo: 'Introducción y bases conceptuales',   video_url: `${BASE}/videos/${id}_cap1.mp4` },
-        { orden: 2, titulo: 'Técnicas y herramientas profesionales', video_url: `${BASE}/videos/${id}_cap2.mp4` },
-        { orden: 3, titulo: 'Proyecto integrador y presentación',  video_url: `${BASE}/videos/${id}_cap3.mp4` },
-      ],
+    const r = await api('POST', '/api/cursos', {
+      _id:         curso._id,
+      nombre:      curso.nombre,
+      descripcion: curso.descripcion,
+      precio:      curso.precio,
+      categorias:  curso.categorias,
+      creadores,
+      capitulos:   curso.capitulos,  // prepararCapitulos() respeta el _id si viene
     });
-    if (c) console.log(`  ✅ ${c._id} — "${c.nombre}" (creador: ${creador})`);
+    if (r) console.log(`  ✅ ${r._id} — "${r.nombre}" | creadores: ${r.creadores} | caps: ${r.capitulos?.length ?? 0}`);
   }
 }
 
@@ -445,7 +491,8 @@ async function crearOfertaEncargo() {
   const faltan   = Math.max(0, 20 - actuales.length);
   console.log(`  Actuales: ${actuales.length} — a crear: ${faltan}`);
 
-  const CLIENTES_EMPRESA = ['usr_002', 'usr_005', 'usr_015', 'usr_016', 'usr_017'];
+  // Usuarios que pueden publicar encargos (clientes + empresas)
+  const CLIENTES_EMPRESA = ['usr_002', 'usr_005', 'usr_022', 'usr_023', 'usr_024', 'usr_025', 'usr_015', 'usr_016', 'usr_017', 'usr_018'];
 
   const encargos = [
     { descripcion: 'Necesito diseño completo de identidad de marca para mi café artesanal en Medellín. Incluye logo, paleta de colores y tipografía para uso en redes y materiales físicos.', imgs: [1, 2], rango: { min: 800000, max: 1500000 } },
@@ -493,9 +540,16 @@ async function crearPublicaciones() {
   console.log('     ⏳ Esta fase puede tardar varios minutos por los embeddings de imagen...');
 
   // publicacionesRoutes no tiene GET /, se cuenta directo en MongoDB
-  const total = await directDB(async db => db.collection('publicaciones').countDocuments());
+  const { total, maxN } = await directDB(async db => {
+    const docs = await db.collection('publicaciones').find({}, { projection: { _id: 1 } }).toArray();
+    const max  = docs.reduce((m, p) => {
+      const n = parseInt((p._id ?? '').replace(/\D/g, ''));
+      return isNaN(n) ? m : Math.max(m, n);
+    }, 0);
+    return { total: docs.length, maxN: max };
+  });
   const faltan = Math.max(0, 20 - total);
-  console.log(`  Actuales: ${total} — a crear: ${faltan}`);
+  console.log(`  Actuales: ${total} (max ID: ${maxN}) — a crear: ${faltan}`);
 
   // Publicaciones distribuidas por perfil creativo
   const PUBS = [
@@ -522,14 +576,23 @@ async function crearPublicaciones() {
     { creativo: 'perf_009', sub: 'post_sociales', file: '30.jfif', desc: 'Prototipo de pantalla de onboarding para app de fitness. UX centrado en motivación.',     cats: ['UX Design', 'Mobile'],        esPortafolio: true  },
     { creativo: 'perf_010', sub: 'post_sociales', file: '31.jfif', desc: 'Lettering caligráfico para invitación de boda con estilo rústico y minimalista.',          cats: ['Lettering', 'Caligrafía'],   esPortafolio: true  },
     { creativo: 'perf_010', sub: 'post_sociales', file: '32.jfif', desc: 'Render 3D de producto: botella de agua con branding para marca de hidratación premium.',  cats: ['3D', 'Producto'],             esPortafolio: false },
+    // perf_011 (Carlos — Animador 3D)
+    { creativo: 'perf_011', sub: 'post_sociales', file: '33.jfif', desc: 'Animación de producto en 3D para lanzamiento de sneaker edición limitada. Loop de 5 segundos.',    cats: ['3D', 'Animación'],           esPortafolio: true  },
+    { creativo: 'perf_011', sub: 'post_sociales', file: '34.jfif', desc: 'Modelado arquitectónico en Blender de espacio coworking minimalista para renders de marketing.',    cats: ['3D', 'Modelado'],            esPortafolio: true  },
+    // perf_012 (Luciana — Directora de Arte)
+    { creativo: 'perf_012', sub: 'post_sociales', file: '35.jfif', desc: 'Dirección de arte para editorial de moda colombiana. Concepto visual: botánica urbana.',            cats: ['Dirección de Arte', 'Moda'], esPortafolio: true  },
+    { creativo: 'perf_012', sub: 'post_sociales', file: '36.jfif', desc: 'Layout editorial para revista de arquitectura. Retícula modular con tipografía sans-serif.',        cats: ['Editorial', 'Tipografía'],   esPortafolio: false },
+    // perf_013 (Mateo — Fotógrafo/Videógrafo)
+    { creativo: 'perf_013', sub: 'post_sociales', file: '37.jfif', desc: 'Cobertura fotográfica de festival gastronómico en Cali. Serie de 20 imágenes documentales.',        cats: ['Fotografía', 'Documental'],  esPortafolio: true  },
+    // perf_014 (Natalia — UX/Brand)
+    { creativo: 'perf_014', sub: 'post_sociales', file: '38.jfif', desc: 'Sistema de diseño para app de delivery local. Componentes en Figma con dark mode incluido.',        cats: ['UX Design', 'Sistemas'],     esPortafolio: true  },
   ];
 
-  let idCounter = total + 1;
+  let nextPubN = maxN + 1;  // siguiente al máximo existente
   for (let i = 0; i < faltan; i++) {
     const p = PUBS[i % PUBS.length];
     const imagenUrl = imgPub(p.sub, p.file);
-    const id = `pub_${String(500 + idCounter).padStart(3, '0')}`;
-    idCounter++;
+    const id = `pub_${String(nextPubN++).padStart(3, '0')}`;
 
     const r = await api('POST', '/api/publicaciones', {
       _id:           id,
@@ -587,57 +650,80 @@ async function crearSolicitudes() {
   const actuales = await api('GET', '/api/solicitudes');
   const faltan   = Math.max(0, 20 - actuales.length);
   console.log(`  Actuales: ${actuales.length} — a crear: ${faltan}`);
+  if (!faltan) return;
+
+  // Calcular el máximo N en IDs existentes para evitar colisiones
+  const maxN = actuales.reduce((m, s) => {
+    const n = parseInt((s._id ?? '').replace(/\D/g, ''));
+    return isNaN(n) ? m : Math.max(m, n);
+  }, 0);
 
   const todasOfertas = await api('GET', '/api/oferta-asesoria');
-  const ofertaIds    = todasOfertas.map(o => o._id).filter(id => id !== 'of_ase_102'); // evitar reusar la del seed
+  const ofertaIds    = todasOfertas.map(o => o._id).filter(id => id !== 'of_ase_102');
 
   for (let i = 0; i < faltan; i++) {
-    const id       = `sol_${String(i + 2).padStart(3, '0')}`;
+    const num      = maxN + i + 1;
+    const id       = `sol_${String(num).padStart(3, '0')}`;
     const cliente  = CLIENTES[i % CLIENTES.length];
     const ofertaId = ofertaIds[i % ofertaIds.length];
     const hora     = 9 + (i % 8);
 
     const s = await api('POST', '/api/solicitudes', {
-      _id:               id,
-      usuario_id:        cliente,
+      _id:                id,
+      usuario_id:         cliente,
       oferta_asesoria_id: ofertaId,
-      descripcion:       `Solicitud de asesoría #${i + 2} — busco guía profesional en diseño creativo y desarrollo de portafolio para el mercado colombiano.`,
-      estado:            'aprobada',
-      fecha:             new Date(2026, 5, 10 + (i % 20)).toISOString(),
-      hora_inicio:       `${String(hora).padStart(2, '0')}:00`,
-      hora_fin:          `${String(hora + 1).padStart(2, '0')}:00`,
+      descripcion:        `Solicitud de asesoría #${num} — busco guía profesional en diseño creativo y desarrollo de portafolio para el mercado colombiano.`,
+      estado:             'aprobada',
+      fecha:              new Date(2026, 5, 10 + (i % 20)).toISOString(),
+      hora_inicio:        `${String(hora).padStart(2, '0')}:00`,
+      hora_fin:           `${String(hora + 1).padStart(2, '0')}:00`,
     });
-    if (s) console.log(`  ✅ ${s._id} (cliente: ${cliente})`);
+    if (s) console.log(`  ✅ ${s._id} (cliente: ${cliente}, oferta: ${ofertaId})`);
   }
 }
 
 // ── FASE 9: Pagos + Asesorías (dependencia circular) ─────────────────────────
 
 async function crearPagosYAsesorias() {
-  console.log('\n💳 FASE 9: Pagos + Asesorías (objetivo ≥ 20)');
+  console.log('\n💳 FASE 9: Pagos ASESORIA + Asesorías (objetivo ≥ 20 c/u)');
 
-  const [todasSol, todasAse] = await Promise.all([
+  const [todasSol, todasAse, pagosActuales] = await Promise.all([
     api('GET', '/api/solicitudes'),
     api('GET', '/api/asesorias'),
+    api('GET', '/api/pagos'),
   ]);
 
-  const conAsesoria   = new Set(todasAse.map(a => a.solicitud_id));
-  const sinAsesoria   = todasSol.filter(s => s.estado === 'aprobada' && !conAsesoria.has(s._id));
-  const pagosActuales = await api('GET', '/api/pagos');
-  console.log(`  Solicitudes sin asesoría: ${sinAsesoria.length} | Asesorías: ${todasAse.length}`);
+  const conAsesoria = new Set(todasAse.map(a => a.solicitud_id));
+  const sinAsesoria = todasSol.filter(s => s.estado === 'aprobada' && !conAsesoria.has(s._id));
+  console.log(`  Solicitudes sin asesoría: ${sinAsesoria.length} | Asesorías actuales: ${todasAse.length}`);
+  if (!sinAsesoria.length) { console.log('  ⏭️  Nada que crear'); return; }
 
+  // Max N real en pagos existentes (evita colisión con IDs como pago_444)
+  const maxPagoN = pagosActuales.reduce((m, p) => {
+    const n = parseInt((p._id ?? '').replace(/\D/g, ''));
+    return isNaN(n) ? m : Math.max(m, n);
+  }, 0);
+
+  // Max N en asesorias, ignorando ase_444 (seed especial de workaround)
+  const maxAseN = todasAse.reduce((m, a) => {
+    const n = parseInt((a._id ?? '').replace(/\D/g, ''));
+    if (n === 444) return m;
+    return isNaN(n) ? m : Math.max(m, n);
+  }, 0);
+
+  let pagoN = maxPagoN;
   const pagosNuevos = [];
-  let pagoIdx = pagosActuales.length + 1;
 
   for (let i = 0; i < sinAsesoria.length; i++) {
-    const id      = `pago_${String(pagoIdx++).padStart(3, '0')}`;
+    pagoN++;
+    const id      = `pago_${String(pagoN).padStart(3, '0')}`;
     const cliente = CLIENTES[i % CLIENTES.length];
     const hora    = 10 + (i % 8);
 
     const p = await api('POST', '/api/pagos', {
       _id:       id,
       tipo:      'ASESORIA',
-      source_id: 'ase_444',
+      source_id: 'ase_444',   // workaround ciclo ASESORIA: ase_444 ya existe en seed
       user_id:   cliente,
       monto:     150000 + i * 20000,
       estado:    'pagado',
@@ -645,15 +731,15 @@ async function crearPagosYAsesorias() {
       hora:      `${String(hora).padStart(2, '0')}:${i % 2 === 0 ? '00' : '30'}`,
     });
     if (p) pagosNuevos.push(p._id);
+    else pagoN--;
   }
+  console.log(`  Pagos ASESORIA creados: ${pagosNuevos.length}`);
 
-  console.log(`  Pagos creados: ${pagosNuevos.length}`);
-
-  let aseIdx = todasAse.length;
+  let aseN = maxAseN;
   for (let i = 0; i < Math.min(sinAsesoria.length, pagosNuevos.length); i++) {
-    aseIdx++;
-    const id  = `ase_${String(aseIdx).padStart(3, '0')}`;
-    const num = String(i + 1).padStart(3, '0');
+    aseN++;
+    const id  = `ase_${String(aseN).padStart(3, '0')}`;
+    const num = String(aseN).padStart(3, '0');
 
     const a = await api('POST', '/api/asesorias', {
       _id:             id,
@@ -663,7 +749,419 @@ async function crearPagosYAsesorias() {
       video_grabacion: `${BASE}/grabaciones/sesion_${num}.mp4`,
     });
     if (a) console.log(`  ✅ ${a._id} (pago: ${pagosNuevos[i]}, sol: ${sinAsesoria[i]._id})`);
+    else aseN--;
   }
+}
+
+// ── FASE 10: Encargos (ciclo pago↔encargo resuelto con encargo pre-existente) ─
+
+async function crearEncargos() {
+  console.log('\n🔨 FASE 10: Encargos (objetivo ≥ 20)');
+
+  const actuales = await api('GET', '/api/encargos');
+  const faltan   = Math.max(0, 20 - actuales.length);
+  console.log(`  Actuales: ${actuales.length} — a crear: ${faltan}`);
+  if (!faltan) return;
+
+  // Ciclo encargo↔pago(ENCARGO): encargoController solo valida pago.tipo==='ENCARGO',
+  // no que pago.source_id coincida con el nuevo encargo. Usamos el enc pre-existente.
+  const encargoBase = actuales[0]?._id;
+  if (!encargoBase) { console.log('  ⚠️  Sin encargo base para workaround — saltando'); return; }
+
+  const [pagosAct, ofertasAct, perfilesAct] = await Promise.all([
+    api('GET', '/api/pagos'),
+    api('GET', '/api/oferta-encargo'),
+    api('GET', '/api/creativos'),
+  ]);
+
+  const maxPagoN = pagosAct.reduce((m, p) => {
+    const n = parseInt((p._id ?? '').replace(/\D/g, ''));
+    return isNaN(n) ? m : Math.max(m, n);
+  }, 0);
+  const maxEncN = actuales.reduce((m, e) => {
+    const n = parseInt((e._id ?? '').replace(/\D/g, ''));
+    return isNaN(n) ? m : Math.max(m, n);
+  }, 0);
+
+  const perfIds  = perfilesAct.map(p => p._id);
+  const abiertas = ofertasAct.filter(o => o.estado === 'abierta');
+  console.log(`  Ofertas abiertas: ${abiertas.length} | Base encargo: ${encargoBase}`);
+
+  let pagoN = maxPagoN;
+  let encN  = maxEncN;
+
+  for (let i = 0; i < faltan && i < abiertas.length; i++) {
+    const oferta = abiertas[i];
+    const perfId = perfIds[i % perfIds.length];
+
+    // 1. Agregar postulacion a la oferta (perfil_creativo postula precio)
+    const ofertaUpd = await api('POST', `/api/oferta-encargo/${oferta._id}/postulaciones`, {
+      perfil_creativo_id:           perfId,
+      precio:                       800000 + i * 150000,
+      cantidad_retroalimentaciones: 2,
+    });
+    if (!ofertaUpd) { console.log(`  ⚠️  Postulación falló en ${oferta._id}`); continue; }
+
+    const posts     = ofertaUpd.postulaciones;
+    const nuevaPost = posts[posts.length - 1];
+
+    // 2. Pago tipo ENCARGO — source_id apunta al encargo base (workaround ciclo)
+    pagoN++;
+    const pago = await api('POST', '/api/pagos', {
+      _id:       `pago_${String(pagoN).padStart(3, '0')}`,
+      tipo:      'ENCARGO',
+      source_id: encargoBase,
+      user_id:   oferta.usuario_id,
+      monto:     nuevaPost.precio,
+      estado:    'pagado',
+      fecha:     new Date(2026, 4, 1 + (i % 28)).toISOString(),
+    });
+    if (!pago) { pagoN--; continue; }
+
+    // 3. Encargo apuntando al pago nuevo y la postulacion recién creada
+    encN++;
+    const enc = await api('POST', '/api/encargos', {
+      _id:                           `enc_${String(encN).padStart(3, '0')}`,
+      oferta_encargo_id:             oferta._id,
+      postulacion_id:                nuevaPost._id,
+      pago_id:                       pago._id,
+      fecha_max:                     new Date(2026, 7, 1 + (i % 28)).toISOString(),
+      retroalimentaciones_acordadas: 2,
+      estado:                        'activo',
+    });
+    if (enc) console.log(`  ✅ ${enc._id} | oferta: ${oferta._id} | post: ${nuevaPost._id} | pago: ${pago._id}`);
+    else encN--;
+  }
+}
+
+// ── FASE: Comentarios ────────────────────────────────────────────────────────
+
+async function crearComentarios() {
+  console.log('\n💬 FASE: Comentarios (objetivo ≥ 20)');
+
+  const total  = await directDB(async db => db.collection('comentarios').countDocuments());
+  const faltan = Math.max(0, 20 - total);
+  console.log(`  Actuales: ${total} — a crear: ${faltan}`);
+  if (!faltan) return;
+
+  // Un capítulo por curso (17 cursos × 6 caps; usamos el primero de cada uno)
+  const CAPS = [
+    'cap_2001','cap_2007','cap_2013','cap_2019','cap_2025','cap_2031',
+    'cap_2037','cap_2043','cap_2049','cap_2055','cap_2061','cap_2067',
+    'cap_2073','cap_2079','cap_2085','cap_2091','cap_2097','cap_2101',
+    'cap_2003','cap_2009',
+  ];
+
+  // IDs de publicaciones reales (lectura directa — no inserción)
+  const pubIds = await directDB(async db =>
+    db.collection('publicaciones').find({}, { projection: { _id: 1 } })
+      .limit(20).map(d => d._id).toArray()
+  );
+
+  const COMENTADORES = [
+    'usr_001','usr_002','usr_003','usr_004','usr_005',
+    'usr_022','usr_023','usr_024','usr_025','usr_026',
+  ];
+  const TEXTOS_CAP = [
+    'Excelente explicación. Me ayudó a entender la teoría de forma muy clara.',
+    'El ejercicio práctico al final fue clave para afianzar lo aprendido.',
+    'Me gustaría ver más ejemplos con proyectos reales colombianos, pero muy sólido.',
+    'La forma en que explican los temas es muy clara. Volví a ver el capítulo dos veces.',
+    'Perfecto para principiantes. No asume conocimiento previo y explica cada paso.',
+    '¿Tienen recursos adicionales para profundizar en este tema? Muy buen contenido.',
+    'Aplicé lo aprendido en un proyecto real y funcionó perfectamente. Gracias.',
+  ];
+  const TEXTOS_PUB = [
+    'Trabajo increíble, el manejo del color es impresionante.',
+    'Me encanta el concepto detrás de esta pieza. Muy original.',
+    '¿Qué herramienta usaste para lograr ese efecto de textura?',
+    'Este tipo de trabajo es exactamente lo que busco para mi proyecto.',
+    'La composición está muy bien equilibrada, felicitaciones.',
+    'Inspirador. Justo el estilo que quería para mi próxima campaña.',
+  ];
+
+  let creados = 0;
+  for (let i = 0; i < faltan; i++) {
+    // 2 de cada 3 comentarios en capítulos, 1 en publicaciones
+    const enCap      = i % 3 !== 0;
+    const target_type = enCap ? 'capitulo' : 'publicacion';
+    const target_id   = enCap ? CAPS[i % CAPS.length] : pubIds[i % pubIds.length];
+    if (!target_id) continue;
+
+    const r = await api('POST', '/api/comentarios', {
+      target_id,
+      target_type,
+      user_id:  COMENTADORES[i % COMENTADORES.length],
+      contenido: enCap ? TEXTOS_CAP[i % TEXTOS_CAP.length] : TEXTOS_PUB[i % TEXTOS_PUB.length],
+    });
+    if (r) {
+      creados++;
+      console.log(`  ✅ ${r._id} → ${target_type}:${target_id}`);
+    }
+  }
+  console.log(`  Creados: ${creados}`);
+}
+
+// ── FASE: Vector Cursos (RAG — 3 chunks por curso) ───────────────────────────
+
+async function crearVectorCursos() {
+  console.log('\n🧠 FASE: Vector Cursos (DESCRIPCION + TEMARIO + OBJETIVO por curso)');
+  console.log('     ⏳ 22 cursos × 3 embeddings MiniLM — puede tardar varios minutos...');
+
+  // Borrar los existentes (creados sin pipeline real)
+  await directDB(async db => {
+    const del = await db.collection('vector_cursos').deleteMany({});
+    console.log(`  🗑️  vector_cursos eliminados: ${del.deletedCount}`);
+  });
+
+  const cursos = await api('GET', '/api/cursos');
+  console.log(`  Cursos a procesar: ${cursos.length}`);
+  let creados = 0;
+
+  for (const curso of cursos) {
+    const caps = curso.capitulos ?? [];
+    const temario = caps.map(c => c.titulo).filter(Boolean).join(' | ');
+
+    const chunks = [
+      {
+        tipo:     'DESCRIPCION',
+        contenido: `${curso.nombre}. ${curso.descripcion}`,
+      },
+      {
+        tipo:     'TEMARIO',
+        contenido: temario
+          ? `Temario de "${curso.nombre}": ${temario}`
+          : `${curso.nombre} — curso sin temario definido`,
+      },
+      {
+        tipo:     'OBJETIVO',
+        contenido: `Curso de ${(curso.categorias ?? []).join(', ')}: ${curso.nombre}`,
+      },
+    ];
+
+    let ok = 0;
+    for (const chunk of chunks) {
+      const r = await api('POST', '/api/vector/cursos', {
+        curso_id: curso._id,
+        tipo:     chunk.tipo,
+        contenido: chunk.contenido,
+      });
+      if (r) { creados++; ok++; }
+    }
+    console.log(`  ✅ ${curso._id} — ${ok}/3 vectores`);
+  }
+
+  console.log(`  Total vector_cursos creados: ${creados} (esperado: ${cursos.length * 3})`);
+}
+
+// ── FASE: Usuarios Extra (nivel 5) ───────────────────────────────────────────
+
+async function crearUsuariosExtra() {
+  console.log('\n👥 FASE: Usuarios Extra (8 CREATIVO + 12 EMPRESA)');
+
+  for (const u of USUARIOS_EXTRA) {
+    const existe = await api('GET', `/api/usuarios/${u._id}`);
+    if (existe) { console.log(`  ⏭️  ${u._id} ya existe`); continue; }
+
+    const body = {
+      _id:          u._id,
+      nombre:       u.nombre,
+      correo:       u.correo,
+      telefono:     u.telefono,
+      password:     'Kreato2026*',
+      tipo_usuario: u.tipo,
+      intereses:    u.intereses ?? [],
+      ...(u.tipo === 'CREATIVO' && {
+        _id_perfil:  u.perf,
+        descripcion: `Profesional creativo colombiano — ${u.nombre}`,
+      }),
+      ...(u.tipo === 'EMPRESA' && {
+        _id_perfil:  u.perf,
+        nit:         u.nit,
+        sector:      u.sector,
+        descripcion: `Empresa de diseño creativo — ${u.nombre}`,
+      }),
+    };
+
+    const r = await api('POST', '/api/usuarios', body);
+    if (r) console.log(`  ✅ ${r._id} | ${u.tipo} | ${u.nombre}`);
+  }
+}
+
+// ── FASE: Completar perfiles creativos extra ──────────────────────────────────
+
+async function completarPerfilesCreativosExtra() {
+  console.log('\n🎨 FASE: Completar PerfilCreativo Extra (foto + habilidades reales)');
+
+  for (const p of PERFILES_CREATIVOS_EXTRA2) {
+    const porId = await directDB(async db => db.collection('perfil_creativo').findOne({ _id: p._id }));
+    if (!porId) { console.log(`  ⚠️  ${p._id} no encontrado`); continue; }
+
+    const upd = await api('PUT', `/api/creativos/${p._id}`, {
+      profesiones: p.profesiones,
+      habilidades: p.habilidades,
+      descripcion: p.descripcion,
+      experiencia: 'Más de 3 años trabajando en diseño creativo en Colombia',
+      foto_perfil: USUARIOS_EXTRA.find(u => u._id === p.userId)?.foto ?? null,
+    });
+    if (upd) console.log(`  ✅ ${p._id} actualizado`);
+  }
+}
+
+// ── FASE: Logos empresas extra ────────────────────────────────────────────────
+
+async function actualizarLogosEmpresaExtra() {
+  console.log('\n🏢 FASE: Logos para PerfilEmpresa Extra');
+
+  const empresas  = USUARIOS_EXTRA.filter(u => u.tipo === 'EMPRESA');
+  const LOGOS_DSP = [fotoEmp(1), fotoEmp(2), fotoEmp(3)];
+
+  for (let i = 0; i < empresas.length; i++) {
+    const u      = empresas[i];
+    const logo   = u.logo ?? LOGOS_DSP[i % LOGOS_DSP.length];
+    const perfil = await api('GET', `/api/perfil-empresa/${u.perf}`);
+    if (!perfil) { console.log(`  ⚠️  Sin perfil empresa para ${u._id} (${u.perf})`); continue; }
+    const upd = await api('PUT', `/api/perfil-empresa/${perfil._id}`, { logo });
+    if (upd) console.log(`  ✅ ${perfil._id} (${u._id}) logo → ${logo}`);
+  }
+}
+
+// ── FASE: Vector PerfilCreativo (1 chunk por perfil) ─────────────────────────
+
+async function crearVectorPerfilCreativo() {
+  console.log('\n🧠 FASE: Vector PerfilCreativo (descripcion + profesiones + habilidades)');
+
+  await directDB(async db => {
+    const del = await db.collection('vector_perfil_creativo').deleteMany({});
+    console.log(`  🗑️  vector_perfil_creativo eliminados: ${del.deletedCount}`);
+  });
+
+  const perfiles = await api('GET', '/api/creativos');
+  console.log(`  Perfiles a procesar: ${perfiles.length}`);
+  let creados = 0;
+
+  for (const p of perfiles) {
+    const chunks = [
+      { tipo: 'bio',         contenido: p.descripcion ?? `Perfil creativo: ${p._id}` },
+      { tipo: 'herramientas', contenido: p.habilidades?.length  ? `Herramientas: ${p.habilidades.join(', ')}`  : `Habilidades de ${p._id}` },
+      { tipo: 'estilo',      contenido: p.profesiones?.length   ? `Especialidades: ${p.profesiones.join(', ')}` : `Profesiones de ${p._id}` },
+    ];
+
+    let ok = 0;
+    for (const chunk of chunks) {
+      const r = await api('POST', '/api/vector/perfil', {
+        perfil_creativo_id: p._id,
+        tipo:               chunk.tipo,
+        contenido:          chunk.contenido,
+        estrategia_chunking: 'descripcion_completa',
+      });
+      if (r) { creados++; ok++; }
+    }
+    console.log(`  ${ok === 3 ? '✅' : '⚠️ '} ${p._id} — ${ok}/3 chunks`);
+  }
+
+  console.log(`  Total vector_perfil_creativo creados: ${creados} (esperado: ${perfiles.length * 3})`);
+}
+
+// ── FASE: Vector OfertaLaboral (1 chunk por oferta) ───────────────────────────
+
+async function crearVectorOfertaLaboral() {
+  console.log('\n🧠 FASE: Vector OfertaLaboral (cargo + descripcion)');
+
+  await directDB(async db => {
+    const del = await db.collection('vector_oferta_laboral').deleteMany({});
+    console.log(`  🗑️  vector_oferta_laboral eliminados: ${del.deletedCount}`);
+  });
+
+  const ofertas = await api('GET', '/api/oferta-laboral');
+  console.log(`  Ofertas a procesar: ${ofertas.length}`);
+  let creados = 0;
+
+  for (const o of ofertas) {
+    const r = await api('POST', '/api/vector/oferta-laboral', {
+      oferta_laboral_id: o._id,
+      contenido:         `${o.cargo}. ${o.descripcion}`,
+    });
+    if (r) { creados++; console.log(`  ✅ ${o._id} — "${o.cargo}"`); }
+  }
+
+  console.log(`  Total vector_oferta_laboral creados: ${creados}`);
+}
+
+// ── FASE: Recrear perfil_creativo faltantes (perf_001, perf_003, perf_004) ────
+
+const PERFILES_FALTANTES = [
+  {
+    _id: 'perf_001', user_id: 'usr_001',
+    descripcion:  'Ilustradora y diseñadora UX con pasión por la identidad visual, la tipografía y las interfaces digitales. Especializada en branding para marcas emergentes colombianas.',
+    profesiones:  ['Ilustradora Digital', 'Diseñadora UX'],
+    habilidades:  ['Illustrator', 'Figma', 'Procreate', 'Photoshop'],
+    experiencia:  'Más de 4 años en diseño gráfico, UX y branding en Bogotá.',
+  },
+  {
+    _id: 'perf_003', user_id: 'usr_003',
+    descripcion:  'Fotógrafa editorial especializada en moda, retrato de marca personal y fotografía de producto para marcas locales colombianas.',
+    profesiones:  ['Fotógrafa Editorial', 'Directora de Arte'],
+    habilidades:  ['Lightroom', 'Capture One', 'Photoshop', 'Hasselblad'],
+    experiencia:  'Más de 5 años en fotografía editorial y dirección de sesiones en Medellín.',
+  },
+  {
+    _id: 'perf_004', user_id: 'usr_004',
+    descripcion:  'Motion designer y animador 2D/3D con foco en branded content, campañas digitales y motion graphics para publicidad y redes sociales.',
+    profesiones:  ['Motion Designer', 'Animador 2D/3D'],
+    habilidades:  ['After Effects', 'Cinema 4D', 'Premiere', 'Blender'],
+    experiencia:  'Más de 3 años en animación y producción audiovisual para marcas en Colombia.',
+  },
+];
+
+async function recrearPerfilesFaltantes() {
+  console.log('\n🎨 FASE: Recrear perfiles creativos faltantes (perf_001, perf_003, perf_004)');
+
+  for (const p of PERFILES_FALTANTES) {
+    const existe = await api('GET', `/api/creativos/${p._id}`);
+    if (existe) { console.log(`  ⏭️  ${p._id} ya existe`); continue; }
+
+    const r = await api('POST', '/api/creativos', p);
+    if (r) console.log(`  ✅ ${r._id} creado (${p.user_id})`);
+  }
+}
+
+// ── FASE: Vectorizar oferta_encargo (vector_descripcion + vectores_imagenes) ──
+
+async function vectorizarOfertaEncargo() {
+  console.log('\n🧠 FASE: Vectorizar oferta_encargo (vector_descripcion + vectores_imagenes)');
+
+  const ofertas = await api('GET', '/api/oferta-encargo');
+  console.log(`  Ofertas a procesar: ${ofertas.length}`);
+  let ok = 0;
+
+  for (const oe of ofertas) {
+    const r = await api('PATCH', `/api/oferta-encargo/${oe._id}/revectorizar`);
+    if (r) {
+      const dims = r.vector_descripcion?.length ?? 0;
+      const nImg = r.vectores_imagenes?.length ?? 0;
+      console.log(`  ✅ ${oe._id} — vector_descripcion: ${dims} dims, vectores_imagenes: ${nImg}`);
+      ok++;
+    } else {
+      console.log(`  ❌ ${oe._id} — falló`);
+    }
+  }
+
+  console.log(`  Total vectorizados: ${ok}/${ofertas.length}`);
+}
+
+// ── FASE: Limpiar vector_descripcion de oferta_laboral (campo redundante) ─────
+
+async function limpiarVectorDescripcionLaboral() {
+  console.log('\n🧹 FASE: $unset vector_descripcion de oferta_laboral');
+
+  await directDB(async db => {
+    const r = await db.collection('oferta_laboral').updateMany(
+      { vector_descripcion: { $exists: true } },
+      { $unset: { vector_descripcion: '' } }
+    );
+    console.log(`  Documentos actualizados: ${r.modifiedCount}`);
+  });
 }
 
 // ── RESUMEN FINAL ─────────────────────────────────────────────────────────────
@@ -699,18 +1197,48 @@ async function main() {
   console.log('━'.repeat(60));
   console.log('⚠️  Asegúrate de haber reiniciado el servidor antes de continuar.');
 
-  await limpiezaDB();
-  await crearUsuarios();
-  await completarPerfilesCreativos();
-  await actualizarLogosEmpresa();
-  await crearTranscripciones();
-  await crearCursos();
-  await crearOfertaLaboral();
-  await crearOfertaEncargo();
-  await crearPublicaciones();
-  await crearOfertaAsesoria();
-  await crearSolicitudes();
-  await crearPagosYAsesorias();
+  // ── Nivel 0: ✅ COMPLETADO ──────────────────────────────────────────────────
+  // await limpiezaDB();
+  // await crearUsuarios();
+  // await completarPerfilesCreativos();
+  // await actualizarLogosEmpresa();
+
+  // ── Nivel 1: ✅ COMPLETADO ──────────────────────────────────────────────────
+  // await crearCursos();
+  // await crearOfertaEncargo();
+  // await crearPublicaciones();
+
+  // ── Nivel 2: ✅ COMPLETADO ─────────────────────────────────────────────────
+  // await crearTranscripciones();
+  // await crearOfertaLaboral();
+  // await crearOfertaAsesoria();
+  // await crearComentarios();
+
+  // ── Nivel 3: ✅ COMPLETADO ─────────────────────────────────────────────────
+  // await crearPublicaciones();
+  // await crearSolicitudes();
+
+  // ── Nivel 4: (pendiente) ────────────────────────────────────────────────────
+  // await crearPagosYAsesorias();
+  // await crearEncargos();
+
+  // ── Vectores: ✅ COMPLETADO ───────────────────────────────────────────────
+  // await crearVectorCursos();
+  // await crearVectorOfertaLaboral();
+
+  // ── Nivel 5: ✅ COMPLETADO ────────────────────────────────────────────────
+  // await crearUsuariosExtra();              // 8 CREATIVO + 12 EMPRESA
+  // await completarPerfilesCreativosExtra(); // foto + habilidades + vectoriza (síncrono ahora)
+  // await actualizarLogosEmpresaExtra();     // logos en los 12 empresas
+
+  // ── Vector perfil_creativo: ✅ COMPLETADO ─────────────────────────────────
+  // await crearVectorPerfilCreativo();
+
+  // ── Perfiles faltantes + vectores oferta_encargo ──────────────────────────
+  await recrearPerfilesFaltantes();
+  // await limpiarVectorDescripcionLaboral();  // ✅ ya corrió (20 docs actualizados)
+  await vectorizarOfertaEncargo();
+
   await resumenFinal();
 }
 

@@ -1,8 +1,31 @@
 import { randomUUID } from 'crypto';
 import Cursos from '../models/Cursos.js';
-import { nuevoIdSecuencial } from '../utils/ids.js';
+import VectorCursos from '../models/VectorCursos.js';
+import { nuevoIdSecuencial, nuevoIdUuid } from '../utils/ids.js';
 import { asegurarReferencia } from '../utils/referencias.js';
 import { httpError } from '../utils/httpError.js';
+import { embed } from '../services/embeddingService.js';
+
+// Genera los 3 chunks de vector_cursos para un curso (reemplaza los existentes).
+const vectorizarCurso = async (curso) => {
+  await VectorCursos.deleteMany({ curso_id: curso._id });
+  const caps    = curso.capitulos ?? [];
+  const temario = caps.map(c => c.titulo).filter(Boolean).join(' | ');
+  const chunks  = [
+    { tipo: 'DESCRIPCION', contenido: `${curso.nombre}. ${curso.descripcion}` },
+    { tipo: 'TEMARIO',     contenido: temario ? `Temario de "${curso.nombre}": ${temario}` : curso.nombre },
+    { tipo: 'OBJETIVO',    contenido: `Curso de ${(curso.categorias ?? []).join(', ')}: ${curso.nombre}` },
+  ];
+  for (const chunk of chunks) {
+    try {
+      const vector_embedding = await embed(chunk.contenido);
+      await VectorCursos.create({ _id: nuevoIdUuid(), curso_id: curso._id, tipo: chunk.tipo, contenido: chunk.contenido, vector_embedding });
+    } catch (e) {
+      console.warn(`[cursosController] ⚠️  chunk ${chunk.tipo} de ${curso._id}: ${e.message}`);
+    }
+  }
+  console.log(`[cursosController] ✅ ${curso._id} — 3 chunks en vector_cursos`);
+};
 
 const COLECCION = 'cursos';
 
@@ -31,6 +54,8 @@ export const crearCurso = async (req, res) => {
 
   await validarCreadores(creadores);
 
+  const vector_contenido = await embed(`${nombre}. ${descripcion}`);
+
   const _id = await nuevoIdSecuencial(COLECCION, req.body._id);
   const curso = await Cursos.create({
     _id,
@@ -39,10 +64,16 @@ export const crearCurso = async (req, res) => {
     precio,
     categorias,
     creadores,
-    capitulos: prepararCapitulos(_id, capitulos)
-    // rating_promedio, total_resenas, compras → defaults del modelo
-    // vector_contenido → lo llena el pipeline RAG
+    capitulos: prepararCapitulos(_id, capitulos),
+    vector_contenido,
   });
+
+  // Pipeline vectorial: 3 chunks en vector_cursos (síncrono antes del 201)
+  try {
+    await vectorizarCurso(curso);
+  } catch (e) {
+    console.warn(`[cursosController] ⚠️  Pipeline vector_cursos falló para ${_id}: ${e.message}`);
+  }
 
   res.status(201).json(curso);
 };
@@ -77,11 +108,28 @@ export const actualizarCurso = async (req, res) => {
     await validarCreadores(cambios.creadores);
   }
 
+  // Re-embed vector_contenido si cambia el texto principal
+  if (cambios.nombre || cambios.descripcion) {
+    const actual = await Cursos.findById(req.params.id);
+    if (!actual) throw httpError(404, 'Curso no encontrado');
+    const nom  = cambios.nombre       ?? actual.nombre;
+    const desc = cambios.descripcion  ?? actual.descripcion;
+    cambios.vector_contenido = await embed(`${nom}. ${desc}`);
+  }
+
   const curso = await Cursos.findByIdAndUpdate(req.params.id, cambios, {
     new: true,
     runValidators: true
   });
   if (!curso) throw httpError(404, 'Curso no encontrado');
+
+  // Re-vectorizar vector_cursos si cambió contenido relevante (fire-and-forget)
+  if (cambios.nombre || cambios.descripcion || cambios.categorias || cambios.capitulos) {
+    vectorizarCurso(curso).catch(e =>
+      console.warn(`[cursosController] ⚠️  Re-vectorización fallida: ${e.message}`)
+    );
+  }
+
   res.json(curso);
 };
 

@@ -97,6 +97,30 @@ export const actualizarOfertaEncargo = async (req, res) => {
   res.json(oferta);
 };
 
+// PATCH /api/oferta-encargo/:id/revectorizar — recalcula vector_descripcion y vectores_imagenes
+export const revectorizarOfertaEncargo = async (req, res) => {
+  const oferta = await OfertaEncargo.findById(req.params.id);
+  if (!oferta) throw httpError(404, 'Oferta de encargo no encontrada');
+
+  const vector_descripcion = await embed(oferta.descripcion);
+
+  const vectores_imagenes = [];
+  for (const url of (oferta.imagenes ?? [])) {
+    try {
+      vectores_imagenes.push(await embedImage(url));
+    } catch {
+      vectores_imagenes.push([]);
+    }
+  }
+
+  const actualizada = await OfertaEncargo.findByIdAndUpdate(
+    req.params.id,
+    { $set: { vector_descripcion, vectores_imagenes } },
+    { new: true }
+  );
+  res.json(actualizada);
+};
+
 // PATCH /api/oferta-encargo/:id/estado
 export const cambiarEstadoOfertaEncargo = async (req, res) => {
   const { estado } = req.body ?? {};

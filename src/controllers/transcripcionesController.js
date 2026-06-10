@@ -33,6 +33,18 @@ export const crearTranscripcion = async (req, res) => {
 
   const _id = await nuevoIdSecuencial(COLECCION, req.body._id);
   const trans = await Transcripciones.create({ _id, source_id, texto_completo, lineas: lineas ?? [] });
+
+  // Pipeline RAG síncrono: las 3 estrategias de chunking se guardan en
+  // vector_transcripciones antes de responder. Igual a como publicaciones
+  // embeddea la imagen antes de devolver el 201.
+  try {
+    const resultado = await procesarTodasEstrategias(_id);
+    const totales = Object.values(resultado.resultados).map(r => r.chunks_generados);
+    console.log(`[transcripciones] ✅ ${_id} — chunks por estrategia: ${totales.join(' / ')}`);
+  } catch (err) {
+    console.error(`[transcripciones] ⚠️  pipeline RAG falló para ${_id}:`, err.message);
+  }
+
   res.status(201).json(trans);
 };
 

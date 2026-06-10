@@ -5,7 +5,6 @@ const ofertaLaboralSchema = new mongoose.Schema({
   perfil_empresa_id: { type: String, required: true },
   cargo: { type: String, required: true },
   descripcion: { type: String, required: true },
-  vector_descripcion: [{ type: Number }],
   presupuesto: { type: String },
   postulados: [{ type: String }],
   estado: {

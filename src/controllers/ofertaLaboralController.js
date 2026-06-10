@@ -1,7 +1,10 @@
 import OfertaLaboral from '../models/OfertaLaboral.js';
+import VectorOfertaLaboral from '../models/VectorOfertaLaboral.js';
 import PerfilEmpresa from '../models/PerfilEmpresa.js';
 import Usuario from '../models/Usuarios.js';
 import { nuevoIdSecuencial } from '../utils/ids.js';
+import { generarSiguienteId } from '../models/idGeneratorService.js';
+import { embed } from '../services/embeddingService.js';
 
 export const crear = async (req, res) => {
   try {
@@ -13,6 +16,20 @@ export const crear = async (req, res) => {
     const _id = await nuevoIdSecuencial('oferta_laboral', req.body._id ?? null);
     const oferta = new OfertaLaboral({ _id, perfil_empresa_id, cargo, descripcion, presupuesto, postulados: [], estado: 'activa' });
     await oferta.save();
+
+    // Pipeline vectorial: entrada en vector_oferta_laboral (síncrono)
+    try {
+      const vidId = await generarSiguienteId('vector_oferta_laboral', 'VOL');
+      await VectorOfertaLaboral.create({
+        _id:               vidId,
+        oferta_laboral_id: _id,
+        contenido:         `${cargo}. ${descripcion}`,
+        vector_embedding:  await embed(`${cargo}. ${descripcion}`),
+      });
+      console.log(`[ofertaLaboralController] ✅ ${_id} — vector_oferta_laboral creado`);
+    } catch (ve) {
+      console.warn(`[ofertaLaboralController] ⚠️  Pipeline vector falló para ${_id}: ${ve.message}`);
+    }
 
     res.status(201).json(oferta);
   } catch (error) {
@@ -46,9 +63,23 @@ export const obtenerPorId = async (req, res) => {
 
 export const actualizar = async (req, res) => {
   try {
-    const camposPermitidos = ['cargo', 'descripcion', 'presupuesto', 'estado', 'vector_descripcion'];
+    const camposPermitidos = ['cargo', 'descripcion', 'presupuesto', 'estado'];
     const actualizacion = {};
     camposPermitidos.forEach(campo => { if (req.body[campo] !== undefined) actualizacion[campo] = req.body[campo]; });
+
+    // Re-vectorizar vector_oferta_laboral si cambia descripcion o cargo (fire-and-forget)
+    if (actualizacion.descripcion || actualizacion.cargo) {
+      const actual = await OfertaLaboral.findById(req.params.id);
+      if (!actual) return res.status(404).json({ error: 'Oferta laboral no encontrada.' });
+      const cargo = actualizacion.cargo ?? actual.cargo;
+      const desc  = actualizacion.descripcion ?? actual.descripcion;
+      VectorOfertaLaboral.deleteMany({ oferta_laboral_id: req.params.id })
+        .then(() => embed(`${cargo}. ${desc}`))
+        .then(vec => generarSiguienteId('vector_oferta_laboral', 'VOL').then(id =>
+          VectorOfertaLaboral.create({ _id: id, oferta_laboral_id: req.params.id, contenido: `${cargo}. ${desc}`, vector_embedding: vec })
+        ))
+        .catch(e => console.warn(`[ofertaLaboralController] ⚠️  Re-vectorización: ${e.message}`));
+    }
 
     const oferta = await OfertaLaboral.findByIdAndUpdate(req.params.id, actualizacion, { new: true, runValidators: true });
     if (!oferta) return res.status(404).json({ error: 'Oferta laboral no encontrada.' });
